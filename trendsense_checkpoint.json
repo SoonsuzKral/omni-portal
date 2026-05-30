@@ -1,0 +1,213 @@
+{
+  "processed": [
+    "jorge jesus",
+    "girona fc",
+    "espanyol",
+    "michael olise",
+    "harry kane",
+    "iraola",
+    "لا ليغا",
+    "tan taşçı konser",
+    "grev",
+    "çılgın sayisal",
+    "ahmet akın",
+    "trossard",
+    "rico verhoeven",
+    "kütahya bayram namazı",
+    "sarah fahr",
+    "kurban bayramınız mübarek olsun",
+    "adile naşit neden öldü",
+    "mame thiam",
+    "greuther fürth",
+    "عيد اضحى مبارك",
+    "qnb",
+    "playstation",
+    "nijerya",
+    "ricky martin",
+    "alarm",
+    "nice fc",
+    "eid mubarak",
+    "bayram mesaji",
+    "ebola virüsü",
+    "ebola",
+    "صلاة العيد",
+    {
+      "keyword": "27 mayıs",
+      "date": "2026-05-27"
+    },
+    {
+      "keyword": "ricky martin",
+      "date": "2026-05-27"
+    },
+    {
+      "keyword": "alarm",
+      "date": "2026-05-27"
+    },
+    {
+      "keyword": "nice fc",
+      "date": "2026-05-27"
+    },
+    {
+      "keyword": "eid mubarak",
+      "date": "2026-05-27"
+    },
+    {
+      "keyword": "bayram mesaji",
+      "date": "2026-05-27"
+    },
+    {
+      "keyword": "ebola",
+      "date": "2026-05-27"
+    },
+    {
+      "keyword": "ebola virüsü",
+      "date": "2026-05-27"
+    },
+    {
+      "keyword": "صلاة العيد",
+      "date": "2026-05-27"
+    },
+    {
+      "keyword": "sarah fahr",
+      "date": "2026-05-27"
+    },
+    {
+      "keyword": "hububat",
+      "date": "2026-05-28"
+    },
+    {
+      "keyword": "jannik sinner",
+      "date": "2026-05-28"
+    },
+    {
+      "keyword": "bağ-kur",
+      "date": "2026-05-28"
+    },
+    {
+      "keyword": "samsun hava durumu",
+      "date": "2026-05-28"
+    },
+    {
+      "keyword": "vedat muriqi",
+      "date": "2026-05-28"
+    },
+    {
+      "keyword": "kütahya hava durumu",
+      "date": "2026-05-28"
+    },
+    {
+      "keyword": "kırşehir hava durumu",
+      "date": "2026-05-28"
+    },
+    {
+      "keyword": "bim bayramın 2 günü açık mı",
+      "date": "2026-05-28"
+    },
+    {
+      "keyword": "müzekart",
+      "date": "2026-05-28"
+    },
+    {
+      "keyword": "alişan",
+      "date": "2026-05-28"
+    },
+    {
+      "keyword": "hazırlık maçı",
+      "date": "2026-05-28"
+    },
+    {
+      "keyword": "kuzey marmara otoyolu bayramda ücretsiz mi",
+      "date": "2026-05-28"
+    },
+    {
+      "keyword": "amasra",
+      "date": "2026-05-28"
+    },
+    {
+      "keyword": "klima",
+      "date": "2026-05-28"
+    },
+    {
+      "keyword": "hava durumu bodrum",
+      "date": "2026-05-28"
+    }
+  ],
+  "failed": [],
+  "stats": {
+    "27 mayıs": {
+      "node_count": 10
+    },
+    "ricky martin": {
+      "node_count": 10
+    },
+    "alarm": {
+      "node_count": 10
+    },
+    "nice fc": {
+      "node_count": 10
+    },
+    "eid mubarak": {
+      "node_count": 10
+    },
+    "bayram mesaji": {
+      "node_count": 10
+    },
+    "ebola": {
+      "node_count": 10
+    },
+    "ebola virüsü": {
+      "node_count": 10
+    },
+    "صلاة العيد": {
+      "node_count": 10
+    },
+    "sarah fahr": {
+      "node_count": 10
+    },
+    "hububat": {
+      "node_count": 2698
+    },
+    "jannik sinner": {
+      "node_count": 2698
+    },
+    "bağ-kur": {
+      "node_count": 2698
+    },
+    "samsun hava durumu": {
+      "node_count": 2698
+    },
+    "vedat muriqi": {
+      "node_count": 2698
+    },
+    "kütahya hava durumu": {
+      "node_count": 2698
+    },
+    "kırşehir hava durumu": {
+      "node_count": 2698
+    },
+    "bim bayramın 2 günü açık mı": {
+      "node_count": 2698
+    },
+    "müzekart": {
+      "node_count": 2698
+    },
+    "alişan": {
+      "node_count": 2698
+    },
+    "hazırlık maçı": {
+      "node_count": 2698
+    },
+    "kuzey marmara otoyolu bayramda ücretsiz mi": {
+      "node_count": 2698
+    },
+    "amasra": {
+      "node_count": 2698
+    },
+    "klima": {
+      "node_count": 2698
+    },
+    "hava durumu bodrum": {
+      "node_count": 2698
+    }
+  }
+}

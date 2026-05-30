@@ -1,0 +1,526 @@
+{
+  "locale": "EN",
+  "niche_count": 74,
+  "keyword_count": 74,
+  "generated_at": "2026-05-21T23:17:21",
+  "niches": [
+    {
+      "name": "AC Repair",
+      "slug": "ac-repair",
+      "keywords": [
+        "AC Repair"
+      ]
+    },
+    {
+      "name": "Appliance Repair",
+      "slug": "appliance-repair",
+      "keywords": [
+        "Appliance Repair"
+      ]
+    },
+    {
+      "name": "Auto Parts",
+      "slug": "auto-parts",
+      "keywords": [
+        "Auto Parts"
+      ]
+    },
+    {
+      "name": "Auto Repair",
+      "slug": "auto-repair",
+      "keywords": [
+        "Auto Repair"
+      ]
+    },
+    {
+      "name": "Bakery",
+      "slug": "bakery",
+      "keywords": [
+        "Bakery"
+      ]
+    },
+    {
+      "name": "Barber Shop",
+      "slug": "barber-shop",
+      "keywords": [
+        "Barber Shop"
+      ]
+    },
+    {
+      "name": "Beauty Salon",
+      "slug": "beauty-salon",
+      "keywords": [
+        "Beauty Salon"
+      ]
+    },
+    {
+      "name": "Bike Shop",
+      "slug": "bike-shop",
+      "keywords": [
+        "Bike Shop"
+      ]
+    },
+    {
+      "name": "Cafe",
+      "slug": "cafe",
+      "keywords": [
+        "Cafe"
+      ]
+    },
+    {
+      "name": "Carpenter",
+      "slug": "carpenter",
+      "keywords": [
+        "Carpenter"
+      ]
+    },
+    {
+      "name": "Carpet Cleaning",
+      "slug": "carpet-cleaning",
+      "keywords": [
+        "Carpet Cleaning"
+      ]
+    },
+    {
+      "name": "Car Wash",
+      "slug": "car-wash",
+      "keywords": [
+        "Car Wash"
+      ]
+    },
+    {
+      "name": "Chiropractor",
+      "slug": "chiropractor",
+      "keywords": [
+        "Chiropractor"
+      ]
+    },
+    {
+      "name": "Cleaning Service",
+      "slug": "cleaning-service",
+      "keywords": [
+        "Cleaning Service"
+      ]
+    },
+    {
+      "name": "Computer Repair",
+      "slug": "computer-repair",
+      "keywords": [
+        "Computer Repair"
+      ]
+    },
+    {
+      "name": "Contractor",
+      "slug": "contractor",
+      "keywords": [
+        "Contractor"
+      ]
+    },
+    {
+      "name": "Dentist",
+      "slug": "dentist",
+      "keywords": [
+        "Dentist"
+      ]
+    },
+    {
+      "name": "Dermatologist",
+      "slug": "dermatologist",
+      "keywords": [
+        "Dermatologist"
+      ]
+    },
+    {
+      "name": "Dog Groomer",
+      "slug": "dog-groomer",
+      "keywords": [
+        "Dog Groomer"
+      ]
+    },
+    {
+      "name": "Dry Cleaner",
+      "slug": "dry-cleaner",
+      "keywords": [
+        "Dry Cleaner"
+      ]
+    },
+    {
+      "name": "Electrician",
+      "slug": "electrician",
+      "keywords": [
+        "Electrician"
+      ]
+    },
+    {
+      "name": "Electronics Store",
+      "slug": "electronics-store",
+      "keywords": [
+        "Electronics Store"
+      ]
+    },
+    {
+      "name": "Event Planner",
+      "slug": "event-planner",
+      "keywords": [
+        "Event Planner"
+      ]
+    },
+    {
+      "name": "Fitness Center",
+      "slug": "fitness-center",
+      "keywords": [
+        "Fitness Center"
+      ]
+    },
+    {
+      "name": "Flooring Contractor",
+      "slug": "flooring-contractor",
+      "keywords": [
+        "Flooring Contractor"
+      ]
+    },
+    {
+      "name": "Florist",
+      "slug": "florist",
+      "keywords": [
+        "Florist"
+      ]
+    },
+    {
+      "name": "Furniture Store",
+      "slug": "furniture-store",
+      "keywords": [
+        "Furniture Store"
+      ]
+    },
+    {
+      "name": "Garage Door Repair",
+      "slug": "garage-door-repair",
+      "keywords": [
+        "Garage Door Repair"
+      ]
+    },
+    {
+      "name": "Gardener",
+      "slug": "gardener",
+      "keywords": [
+        "Gardener"
+      ]
+    },
+    {
+      "name": "General Contractor",
+      "slug": "general-contractor",
+      "keywords": [
+        "General Contractor"
+      ]
+    },
+    {
+      "name": "Hair Salon",
+      "slug": "hair-salon",
+      "keywords": [
+        "Hair Salon"
+      ]
+    },
+    {
+      "name": "Hardware Store",
+      "slug": "hardware-store",
+      "keywords": [
+        "Hardware Store"
+      ]
+    },
+    {
+      "name": "Heating Repair",
+      "slug": "heating-repair",
+      "keywords": [
+        "Heating Repair"
+      ]
+    },
+    {
+      "name": "Home Inspection",
+      "slug": "home-inspection",
+      "keywords": [
+        "Home Inspection"
+      ]
+    },
+    {
+      "name": "HVAC Contractor",
+      "slug": "hvac-contractor",
+      "keywords": [
+        "HVAC Contractor"
+      ]
+    },
+    {
+      "name": "Interior Designer",
+      "slug": "interior-designer",
+      "keywords": [
+        "Interior Designer"
+      ]
+    },
+    {
+      "name": "IT Support",
+      "slug": "it-support",
+      "keywords": [
+        "IT Support"
+      ]
+    },
+    {
+      "name": "Jewelry Store",
+      "slug": "jewelry-store",
+      "keywords": [
+        "Jewelry Store"
+      ]
+    },
+    {
+      "name": "Landscaper",
+      "slug": "landscaper",
+      "keywords": [
+        "Landscaper"
+      ]
+    },
+    {
+      "name": "Laundromat",
+      "slug": "laundromat",
+      "keywords": [
+        "Laundromat"
+      ]
+    },
+    {
+      "name": "Lawyer",
+      "slug": "lawyer",
+      "keywords": [
+        "Lawyer"
+      ]
+    },
+    {
+      "name": "Locksmith",
+      "slug": "locksmith",
+      "keywords": [
+        "Locksmith"
+      ]
+    },
+    {
+      "name": "Maid Service",
+      "slug": "maid-service",
+      "keywords": [
+        "Maid Service"
+      ]
+    },
+    {
+      "name": "Massage Therapist",
+      "slug": "massage-therapist",
+      "keywords": [
+        "Massage Therapist"
+      ]
+    },
+    {
+      "name": "Mechanic",
+      "slug": "mechanic",
+      "keywords": [
+        "Mechanic"
+      ]
+    },
+    {
+      "name": "Moving Company",
+      "slug": "moving-company",
+      "keywords": [
+        "Moving Company"
+      ]
+    },
+    {
+      "name": "Nail Salon",
+      "slug": "nail-salon",
+      "keywords": [
+        "Nail Salon"
+      ]
+    },
+    {
+      "name": "Notary",
+      "slug": "notary",
+      "keywords": [
+        "Notary"
+      ]
+    },
+    {
+      "name": "Optometrist",
+      "slug": "optometrist",
+      "keywords": [
+        "Optometrist"
+      ]
+    },
+    {
+      "name": "Orthodontist",
+      "slug": "orthodontist",
+      "keywords": [
+        "Orthodontist"
+      ]
+    },
+    {
+      "name": "Painter",
+      "slug": "painter",
+      "keywords": [
+        "Painter"
+      ]
+    },
+    {
+      "name": "Pet Groomer",
+      "slug": "pet-groomer",
+      "keywords": [
+        "Pet Groomer"
+      ]
+    },
+    {
+      "name": "Pet Store",
+      "slug": "pet-store",
+      "keywords": [
+        "Pet Store"
+      ]
+    },
+    {
+      "name": "Pharmacy",
+      "slug": "pharmacy",
+      "keywords": [
+        "Pharmacy"
+      ]
+    },
+    {
+      "name": "Photographer",
+      "slug": "photographer",
+      "keywords": [
+        "Photographer"
+      ]
+    },
+    {
+      "name": "Plumber",
+      "slug": "plumber",
+      "keywords": [
+        "Plumber"
+      ]
+    },
+    {
+      "name": "Real Estate Agent",
+      "slug": "real-estate-agent",
+      "keywords": [
+        "Real Estate Agent"
+      ]
+    },
+    {
+      "name": "Restaurant",
+      "slug": "restaurant",
+      "keywords": [
+        "Restaurant"
+      ]
+    },
+    {
+      "name": "Roofing Contractor",
+      "slug": "roofing-contractor",
+      "keywords": [
+        "Roofing Contractor"
+      ]
+    },
+    {
+      "name": "Security System",
+      "slug": "security-system",
+      "keywords": [
+        "Security System"
+      ]
+    },
+    {
+      "name": "Spa",
+      "slug": "spa",
+      "keywords": [
+        "Spa"
+      ]
+    },
+    {
+      "name": "Storage Facility",
+      "slug": "storage-facility",
+      "keywords": [
+        "Storage Facility"
+      ]
+    },
+    {
+      "name": "Tailor",
+      "slug": "tailor",
+      "keywords": [
+        "Tailor"
+      ]
+    },
+    {
+      "name": "Tattoo Shop",
+      "slug": "tattoo-shop",
+      "keywords": [
+        "Tattoo Shop"
+      ]
+    },
+    {
+      "name": "Taxi Service",
+      "slug": "taxi-service",
+      "keywords": [
+        "Taxi Service"
+      ]
+    },
+    {
+      "name": "Tire Shop",
+      "slug": "tire-shop",
+      "keywords": [
+        "Tire Shop"
+      ]
+    },
+    {
+      "name": "Towing Service",
+      "slug": "towing-service",
+      "keywords": [
+        "Towing Service"
+      ]
+    },
+    {
+      "name": "Travel Agent",
+      "slug": "travel-agent",
+      "keywords": [
+        "Travel Agent"
+      ]
+    },
+    {
+      "name": "Tree Service",
+      "slug": "tree-service",
+      "keywords": [
+        "Tree Service"
+      ]
+    },
+    {
+      "name": "Veterinarian",
+      "slug": "veterinarian",
+      "keywords": [
+        "Veterinarian"
+      ]
+    },
+    {
+      "name": "Water Damage Restoration",
+      "slug": "water-damage-restoration",
+      "keywords": [
+        "Water Damage Restoration"
+      ]
+    },
+    {
+      "name": "Wedding Planner",
+      "slug": "wedding-planner",
+      "keywords": [
+        "Wedding Planner"
+      ]
+    },
+    {
+      "name": "Window Cleaner",
+      "slug": "window-cleaner",
+      "keywords": [
+        "Window Cleaner"
+      ]
+    },
+    {
+      "name": "Yoga Studio",
+      "slug": "yoga-studio",
+      "keywords": [
+        "Yoga Studio"
+      ]
+    }
+  ]
+}

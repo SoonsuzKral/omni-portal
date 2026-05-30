@@ -1,0 +1,20 @@
+# Gereksiz Klasörler
+node_modules/
+vendor/
+storage/
+bootstrap/cache/
+public/build/
+public/storage/
+.git/
+.env
+.env.backup
+
+# Log ve Temp Dosyaları
+*.log
+.phpunit.result.cache
+.vscode/
+.idea/
+
+# Asset çıktıları
+public/css/
+public/js/

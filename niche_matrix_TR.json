@@ -1,0 +1,414 @@
+{
+  "locale": "TR",
+  "niche_count": 58,
+  "keyword_count": 58,
+  "generated_at": "2026-05-21T23:17:21",
+  "niches": [
+    {
+      "name": "Klima Servisi",
+      "slug": "klima-servisi",
+      "keywords": [
+        "Klima Servisi"
+      ]
+    },
+    {
+      "name": "Kombi Servisi",
+      "slug": "kombi-servisi",
+      "keywords": [
+        "Kombi Servisi"
+      ]
+    },
+    {
+      "name": "Tesisatçı",
+      "slug": "tesisatçı",
+      "keywords": [
+        "Tesisatçı"
+      ]
+    },
+    {
+      "name": "Elektrikçi",
+      "slug": "elektrikçi",
+      "keywords": [
+        "Elektrikçi"
+      ]
+    },
+    {
+      "name": "Doğalgaz",
+      "slug": "doğalgaz",
+      "keywords": [
+        "Doğalgaz"
+      ]
+    },
+    {
+      "name": "Nakliye",
+      "slug": "nakliye",
+      "keywords": [
+        "Nakliye"
+      ]
+    },
+    {
+      "name": "Halı Yıkama",
+      "slug": "halı-yıkama",
+      "keywords": [
+        "Halı Yıkama"
+      ]
+    },
+    {
+      "name": "Oto Kurtarma",
+      "slug": "oto-kurtarma",
+      "keywords": [
+        "Oto Kurtarma"
+      ]
+    },
+    {
+      "name": "Boya Badana",
+      "slug": "boya-badana",
+      "keywords": [
+        "Boya Badana"
+      ]
+    },
+    {
+      "name": "Güvenlik Kamerası",
+      "slug": "güvenlik-kamerası",
+      "keywords": [
+        "Güvenlik Kamerası"
+      ]
+    },
+    {
+      "name": "Avukat",
+      "slug": "avukat",
+      "keywords": [
+        "Avukat"
+      ]
+    },
+    {
+      "name": "Doktor",
+      "slug": "doktor",
+      "keywords": [
+        "Doktor"
+      ]
+    },
+    {
+      "name": "Diş Hekimi",
+      "slug": "diş-hekimi",
+      "keywords": [
+        "Diş Hekimi"
+      ]
+    },
+    {
+      "name": "Eczane",
+      "slug": "eczane",
+      "keywords": [
+        "Eczane"
+      ]
+    },
+    {
+      "name": "Hastane",
+      "slug": "hastane",
+      "keywords": [
+        "Hastane"
+      ]
+    },
+    {
+      "name": "Kuaför",
+      "slug": "kuaför",
+      "keywords": [
+        "Kuaför"
+      ]
+    },
+    {
+      "name": "Berber",
+      "slug": "berber",
+      "keywords": [
+        "Berber"
+      ]
+    },
+    {
+      "name": "Güzellik Salonu",
+      "slug": "güzellik-salonu",
+      "keywords": [
+        "Güzellik Salonu"
+      ]
+    },
+    {
+      "name": "Spor Salonu",
+      "slug": "spor-salonu",
+      "keywords": [
+        "Spor Salonu"
+      ]
+    },
+    {
+      "name": "Pastane",
+      "slug": "pastane",
+      "keywords": [
+        "Pastane"
+      ]
+    },
+    {
+      "name": "Fırın",
+      "slug": "fırın",
+      "keywords": [
+        "Fırın"
+      ]
+    },
+    {
+      "name": "Market",
+      "slug": "market",
+      "keywords": [
+        "Market"
+      ]
+    },
+    {
+      "name": "Manav",
+      "slug": "manav",
+      "keywords": [
+        "Manav"
+      ]
+    },
+    {
+      "name": "Kafe",
+      "slug": "kafe",
+      "keywords": [
+        "Kafe"
+      ]
+    },
+    {
+      "name": "Restoran",
+      "slug": "restoran",
+      "keywords": [
+        "Restoran"
+      ]
+    },
+    {
+      "name": "Otel",
+      "slug": "otel",
+      "keywords": [
+        "Otel"
+      ]
+    },
+    {
+      "name": "Bilgisayar Tamiri",
+      "slug": "bilgisayar-tamiri",
+      "keywords": [
+        "Bilgisayar Tamiri"
+      ]
+    },
+    {
+      "name": "Cep Telefonu Tamiri",
+      "slug": "cep-telefonu-tamiri",
+      "keywords": [
+        "Cep Telefonu Tamiri"
+      ]
+    },
+    {
+      "name": "Beyaz Eşya Servisi",
+      "slug": "beyaz-eşya-servisi",
+      "keywords": [
+        "Beyaz Eşya Servisi"
+      ]
+    },
+    {
+      "name": "Çamaşır Makinesi Servisi",
+      "slug": "çamaşır-makinesi-servisi",
+      "keywords": [
+        "Çamaşır Makinesi Servisi"
+      ]
+    },
+    {
+      "name": "Bulaşık Makinesi Servisi",
+      "slug": "bulaşık-makinesi-servisi",
+      "keywords": [
+        "Bulaşık Makinesi Servisi"
+      ]
+    },
+    {
+      "name": "Buzdolabı Servisi",
+      "slug": "buzdolabı-servisi",
+      "keywords": [
+        "Buzdolabı Servisi"
+      ]
+    },
+    {
+      "name": "Şofben Servisi",
+      "slug": "şofben-servisi",
+      "keywords": [
+        "Şofben Servisi"
+      ]
+    },
+    {
+      "name": "Su Tesisatçısı",
+      "slug": "su-tesisatçısı",
+      "keywords": [
+        "Su Tesisatçısı"
+      ]
+    },
+    {
+      "name": "Mimar",
+      "slug": "mimar",
+      "keywords": [
+        "Mimar"
+      ]
+    },
+    {
+      "name": "İç Mimar",
+      "slug": "iç-mimar",
+      "keywords": [
+        "İç Mimar"
+      ]
+    },
+    {
+      "name": "Peyzaj Mimarı",
+      "slug": "peyzaj-mimarı",
+      "keywords": [
+        "Peyzaj Mimarı"
+      ]
+    },
+    {
+      "name": "Dekorasyon",
+      "slug": "dekorasyon",
+      "keywords": [
+        "Dekorasyon"
+      ]
+    },
+    {
+      "name": "Taksi",
+      "slug": "taksi",
+      "keywords": [
+        "Taksi"
+      ]
+    },
+    {
+      "name": "Kiralık Araç",
+      "slug": "kiralık-araç",
+      "keywords": [
+        "Kiralık Araç"
+      ]
+    },
+    {
+      "name": "Lastikçi",
+      "slug": "lastikçi",
+      "keywords": [
+        "Lastikçi"
+      ]
+    },
+    {
+      "name": "Oto Yıkama",
+      "slug": "oto-yıkama",
+      "keywords": [
+        "Oto Yıkama"
+      ]
+    },
+    {
+      "name": "Veteriner",
+      "slug": "veteriner",
+      "keywords": [
+        "Veteriner"
+      ]
+    },
+    {
+      "name": "Pet Shop",
+      "slug": "pet-shop",
+      "keywords": [
+        "Pet Shop"
+      ]
+    },
+    {
+      "name": "Çiçekçi",
+      "slug": "çiçekçi",
+      "keywords": [
+        "Çiçekçi"
+      ]
+    },
+    {
+      "name": "Kırtasiye",
+      "slug": "kırtasiye",
+      "keywords": [
+        "Kırtasiye"
+      ]
+    },
+    {
+      "name": "Matbaa",
+      "slug": "matbaa",
+      "keywords": [
+        "Matbaa"
+      ]
+    },
+    {
+      "name": "Fotoğrafçı",
+      "slug": "fotoğrafçı",
+      "keywords": [
+        "Fotoğrafçı"
+      ]
+    },
+    {
+      "name": "Düğün Salonu",
+      "slug": "düğün-salonu",
+      "keywords": [
+        "Düğün Salonu"
+      ]
+    },
+    {
+      "name": "Organizasyon Şirketi",
+      "slug": "organizasyon-şirketi",
+      "keywords": [
+        "Organizasyon Şirketi"
+      ]
+    },
+    {
+      "name": "Özel Ders",
+      "slug": "özel-ders",
+      "keywords": [
+        "Özel Ders"
+      ]
+    },
+    {
+      "name": "Diyetisyen",
+      "slug": "diyetisyen",
+      "keywords": [
+        "Diyetisyen"
+      ]
+    },
+    {
+      "name": "Psikolog",
+      "slug": "psikolog",
+      "keywords": [
+        "Psikolog"
+      ]
+    },
+    {
+      "name": "Fizyoterapist",
+      "slug": "fizyoterapist",
+      "keywords": [
+        "Fizyoterapist"
+      ]
+    },
+    {
+      "name": "Çilingir",
+      "slug": "çilingir",
+      "keywords": [
+        "Çilingir"
+      ]
+    },
+    {
+      "name": "Böcek İlaçlama",
+      "slug": "böcek-ilaçlama",
+      "keywords": [
+        "Böcek İlaçlama"
+      ]
+    },
+    {
+      "name": "Koltuk Yıkama",
+      "slug": "koltuk-yıkama",
+      "keywords": [
+        "Koltuk Yıkama"
+      ]
+    },
+    {
+      "name": "Kamyonet Kiralama",
+      "slug": "kamyonet-kiralama",
+      "keywords": [
+        "Kamyonet Kiralama"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(composer update:*)",
+      "Bash(composer require:*)",
+      "Bash(php artisan:*)",
+      "Bash(php:*)",
+      "Bash(curl -s http://127.0.0.1:8000/)",
+      "Bash(pkill -f \"php artisan serve\")",
+      "Bash(pkill -f \"php -S\")",
+      "Bash(curl -s http://127.0.0.1:8000/test)",
+      "Bash(curl -s http://127.0.0.1:8001/)",
+      "Bash(curl -s http://127.0.0.1:8001/test)",
+      "Bash(curl -s http://127.0.0.1:8002/)"
+    ]
+  }
+}
