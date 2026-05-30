@@ -81,6 +81,29 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <style>
+        .ad-sidebar .ad-zone-container {
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .ad-sidebar ins.adsbygoogle {
+            min-width: 120px;
+            min-height: 240px;
+        }
+        [dir="rtl"] .ad-sidebar-left { order: 2; }
+        [dir="rtl"] .ad-sidebar-right { order: 0; }
+        .ad-layout-wrapper {
+            flex-direction: row;
+        }
+        @media (max-width: 1023px) {
+            .ad-layout-wrapper {
+                flex-direction: column;
+            }
+        }
+    </style>
+
     @stack('head')
 
     @php
@@ -243,9 +266,31 @@
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 py-6">
-        @yield('content')
-    </main>
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <div class="flex gap-4 lg:gap-6 ad-layout-wrapper">
+            <aside class="ad-sidebar ad-sidebar-left hidden xl:block w-[160px] shrink-0">
+                <div class="sticky top-20 space-y-6">
+                    <x-ad-renderer position="left_sidebar_top" />
+                    <x-ad-renderer position="left_sidebar_mid" />
+                    <x-ad-renderer position="left_sidebar_bottom" />
+                </div>
+            </aside>
+
+            <main class="flex-1 min-w-0">
+                <x-ad-renderer position="above_content" />
+                @yield('content')
+                <x-ad-renderer position="below_content" />
+            </main>
+
+            <aside class="ad-sidebar ad-sidebar-right hidden lg:block w-[160px] xl:w-[200px] shrink-0">
+                <div class="sticky top-20 space-y-6">
+                    <x-ad-renderer position="right_sidebar_top" />
+                    <x-ad-renderer position="right_sidebar_mid" />
+                    <x-ad-renderer position="right_sidebar_bottom" />
+                </div>
+            </aside>
+        </div>
+    </div>
 
     @php $footerSlot = config('services.adsense.footer_slot'); @endphp
     @if($adsenseEnabled && !empty($footerSlot))
@@ -262,6 +307,7 @@
     </div>
     @endif
 
+    <x-ad-renderer position="above_footer" />
     <x-ad-renderer position="global_footer" />
 
     <footer class="bg-gray-900 dark:bg-slate-950 text-gray-300 dark:text-gray-400 py-12 mt-12">

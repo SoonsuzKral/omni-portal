@@ -36,6 +36,8 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto">
+    <x-ad-renderer position="above_breadcrumb" />
+
     <!-- Breadcrumb -->
     <nav class="text-sm mb-4">
         <ol class="flex items-center space-x-2">
@@ -44,6 +46,8 @@
             <li class="text-gray-600 dark:text-gray-300">{{ $location->name }}</li>
         </ol>
     </nav>
+
+    <x-ad-renderer position="after_breadcrumb" />
 
     <!-- Header -->
     <header class="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 mb-6">
@@ -57,6 +61,8 @@
             </p>
         @endif
     </header>
+
+    <x-ad-renderer position="below_title" />
 
     <!-- Child Locations (Districts) -->
     @if($children->count() > 0)
@@ -77,6 +83,8 @@
     <div class="mb-6">
         <x-ad-renderer :content="null" position="location_top" />
     </div>
+
+    <x-ad-renderer position="before_content_list" />
 
     <!-- Content List -->
     <div class="space-y-4">
@@ -107,11 +115,15 @@
         @endforelse
     </div>
 
+    <x-ad-renderer position="after_content_list" />
+
     <!-- Pagination -->
     @if($contentNodes->hasPages())
         <div class="mt-8">
             {{ $contentNodes->links() }}
         </div>
     @endif
+
+    <x-ad-renderer position="bottom" />
 </div>
 @endsection

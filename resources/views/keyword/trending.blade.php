@@ -4,12 +4,14 @@
 
 @section('content')
 <div class="max-w-6xl mx-auto">
+    <x-ad-renderer position="above_breadcrumb" />
+
     <header class="mb-8">
         <h1 class="text-3xl font-bold">Trending Keywords</h1>
-        <p class="text-gray-600">Popular search terms in {{ strtoupper($language) }}</p>
+        <p class="text-gray-600 dark:text-gray-400">Popular search terms in {{ strtoupper($language) }}</p>
 
         <!-- Language Filter -->
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-wrap gap-2 mt-4">
             @foreach(['tr', 'en', 'ar', 'ru', 'fa', 'fr'] as $lang)
                 <a href="{{ route('keywords.trending', ['lang' => $lang]) }}"
                    class="px-3 py-1 rounded {{ $language === $lang ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' }}">
@@ -18,6 +20,8 @@
             @endforeach
         </div>
     </header>
+
+    <x-ad-renderer position="below_title" />
 
     <!-- Ad Slot -->
     <div class="mb-6">
@@ -62,6 +66,8 @@
     </section>
     @endif
 
+    <x-ad-renderer position="before_content_list" />
+
     <!-- Keywords Grid -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
         @forelse($keywords as $keyword)
@@ -94,9 +100,13 @@
         @endforelse
     </div>
 
+    <x-ad-renderer position="after_content_list" />
+
     <!-- Pagination -->
     <div class="mt-8">
         {{ $keywords->links() }}
     </div>
+
+    <x-ad-renderer position="bottom" />
 </div>
 @endsection

@@ -16,6 +16,7 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 dark:bg-slate-900">
     <div class="max-w-7xl mx-auto px-4 py-8">
+        <x-ad-renderer position="above_breadcrumb" />
         
         <!-- Search Header -->
         <div class="mb-8">
@@ -26,6 +27,8 @@
                 {{ $contentNodes->total() }} {{ __('search.results_found') }}
             </p>
         </div>
+
+        <x-ad-renderer position="below_title" />
 
         <!-- Ad Slot -->
         <div class="mb-6">
@@ -49,6 +52,8 @@
             @endforeach
         </div>
         @endif
+
+        <x-ad-renderer position="before_content_list" />
 
         <!-- Results Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -107,12 +112,16 @@
             @endforelse
         </div>
 
+        <x-ad-renderer position="after_content_list" />
+
         <!-- Pagination -->
         @if($contentNodes->hasPages())
         <div class="mt-8">
             {{ $contentNodes->appends(request()->query())->links() }}
         </div>
         @endif
+
+        <x-ad-renderer position="bottom" />
 
     </div>
 </div>

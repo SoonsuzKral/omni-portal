@@ -3,12 +3,15 @@
 namespace App\Filament\Pages;
 
 use App\Models\LiveDataVault;
+use App\Models\GlobalAdBlock;
 use Filament\Pages\Page;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Form;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Placeholder;
 use Filament\Notifications\Notification;
 
 class AdSettings extends Page implements HasForms
@@ -34,16 +37,42 @@ class AdSettings extends Page implements HasForms
 
     public function form(Form $form): Form
     {
+        $positionStats = $this->getPositionStats();
+
         return $form
             ->schema([
-                Section::make('ads.txt Yönetimi')
+                Section::make('📊 Ad Positions Overview')
+                    ->description('Current status of all ad positions. Manage individual ad blocks in the Ad Blocks resource.')
+                    ->schema([
+                        Grid::make(4)
+                            ->schema(function () use ($positionStats) {
+                                $cells = [];
+                                $i = 0;
+                                foreach (GlobalAdBlock::POSITIONS as $key => $label) {
+                                    if (in_array($key, ['ga4_tracking', 'clarity_tracking', 'head_script'])) {
+                                        continue;
+                                    }
+                                    $count = $positionStats[$key]['count'] ?? 0;
+                                    $active = $positionStats[$key]['active'] ?? 0;
+                                    $status = $active > 0 ? '🟢' : ($count > 0 ? '🟡' : '⚪');
+                                    $cells[] = Placeholder::make("pos_{$key}")
+                                        ->label("{$status} {$label}")
+                                        ->content("{$active}/{$count} active")
+                                        ->extraAttributes(['class' => 'text-xs']);
+                                    $i++;
+                                }
+                                return $cells;
+                            }),
+                    ])->collapsible(),
+
+                Section::make('📄 ads.txt Yönetimi')
                     ->description('Google AdSense ads.txt içeriğini buradan yönetebilirsiniz. Değişiklikler otomatik olarak /ads.txt adresine yansır.')
                     ->schema([
                         Textarea::make('ads_txt')
                             ->label('ads.txt İçeriği')
                             ->helperText('Google AdSense hesabınızdan aldığınız ads.txt kodunu buraya yapıştırın.')
-                            ->rows(15)
-                            ->extraInputAttributes(['class' => 'font-mono'])
+                            ->rows(10)
+                            ->extraInputAttributes(['class' => 'font-mono text-xs'])
                             ->columnSpanFull(),
                     ]),
             ])
@@ -65,6 +94,29 @@ class AdSettings extends Page implements HasForms
             ->send();
     }
 
+    private function getPositionStats(): array
+    {
+        $stats = [];
+        $blocks = GlobalAdBlock::selectRaw('position, COUNT(*) as total, SUM(active) as active_count')
+            ->groupBy('position')
+            ->pluck('active_count', 'position');
+
+        foreach (GlobalAdBlock::POSITIONS as $key => $label) {
+            $stats[$key] = [
+                'count' => (int) ($blocks[$key] ?? 0),
+                'active' => (int) ($blocks[$key . '_active'] ?? 0),
+            ];
+        }
+
+        foreach ($blocks as $pos => $activeCount) {
+            if (isset($stats[$pos])) {
+                $stats[$pos]['active'] = (int) $activeCount;
+            }
+        }
+
+        return $stats;
+    }
+
     private function getDefaultAdsTxt(): string
     {
         return '# ads.txt - OmviPortal
@@ -78,7 +130,7 @@ class AdSettings extends Page implements HasForms
 
     public static function getNavigationBadge(): ?string
     {
-        $adsTxt = LiveDataVault::where('key', 'ads_txt')->first();
-        return $adsTxt?->value ? '✓' : '!';
+        $total = GlobalAdBlock::where('active', 1)->count();
+        return (string) $total;
     }
 }

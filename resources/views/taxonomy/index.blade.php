@@ -43,6 +43,8 @@ $siblingTaxonomies = $taxonomy->parent ? \App\Models\Taxonomy::where('parent_id'
 
 @section('content')
 <div class="max-w-5xl mx-auto">
+    <x-ad-renderer position="above_breadcrumb" />
+
     <nav class="text-sm mb-6" aria-label="Breadcrumb">
         <ol class="flex items-center flex-wrap gap-2">
             <li><a href="{{ url('/') }}" class="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400">{{ __('common.home') }}</a></li>
@@ -60,6 +62,8 @@ $siblingTaxonomies = $taxonomy->parent ? \App\Models\Taxonomy::where('parent_id'
             @endif
         </ol>
     </nav>
+
+    <x-ad-renderer position="after_breadcrumb" />
 
     <header class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 md:p-8 mb-6 border border-gray-100 dark:border-slate-700">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between">
@@ -88,6 +92,8 @@ $siblingTaxonomies = $taxonomy->parent ? \App\Models\Taxonomy::where('parent_id'
             @endif
         </div>
     </header>
+
+    <x-ad-renderer position="below_title" />
 
     @if(!$location && $locationsWithContent->count() > 0)
     <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6 border border-gray-100 dark:border-slate-700">
@@ -144,6 +150,8 @@ $siblingTaxonomies = $taxonomy->parent ? \App\Models\Taxonomy::where('parent_id'
         <x-ad-renderer position="top" />
     </div>
 
+    <x-ad-renderer position="before_content_list" />
+
     <div class="space-y-4">
         @forelse($contents as $item)
             <article class="bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-lg transition p-5 border border-gray-100 dark:border-slate-700">
@@ -190,10 +198,14 @@ $siblingTaxonomies = $taxonomy->parent ? \App\Models\Taxonomy::where('parent_id'
         @endforelse
     </div>
 
+    <x-ad-renderer position="after_content_list" />
+
     @if($contents->hasPages())
         <div class="mt-8">
             {{ $contents->links() }}
         </div>
     @endif
+
+    <x-ad-renderer position="bottom" />
 </div>
 @endsection

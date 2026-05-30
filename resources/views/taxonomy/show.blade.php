@@ -18,6 +18,8 @@
 
 @section('content')
 <div class="max-w-5xl mx-auto">
+    <x-ad-renderer position="above_breadcrumb" />
+
     <nav class="text-sm mb-6" aria-label="Breadcrumb">
         <ol class="flex items-center flex-wrap gap-2">
             <li><a href="/" class="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400">{{ __('common.home') }}</a></li>
@@ -27,6 +29,8 @@
             <li class="text-gray-600 dark:text-gray-300 font-medium">{{ $taxonomy->name }}</li>
         </ol>
     </nav>
+
+    <x-ad-renderer position="after_breadcrumb" />
 
     <!-- Ad Slot -->
     <div class="mb-6">
@@ -50,6 +54,8 @@
         </div>
     </header>
 
+    <x-ad-renderer position="below_title" />
+
     @if($taxonomy->children->isNotEmpty())
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 mb-6 border border-gray-100 dark:border-slate-700">
         <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{{ __('common.sub_categories') }}</h2>
@@ -63,6 +69,8 @@
         </div>
     </div>
     @endif
+
+    <x-ad-renderer position="before_content_list" />
 
     <div class="space-y-4">
         @forelse($contentNodes as $node)
@@ -99,10 +107,14 @@
         @endforelse
     </div>
 
+    <x-ad-renderer position="after_content_list" />
+
     @if($contentNodes->hasPages())
         <div class="mt-8">
             {{ $contentNodes->links() }}
         </div>
     @endif
+
+    <x-ad-renderer position="bottom" />
 </div>
 @endsection

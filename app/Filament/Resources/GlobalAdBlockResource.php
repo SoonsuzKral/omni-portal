@@ -27,21 +27,9 @@ class GlobalAdBlockResource extends Resource
                 ->label('Block Name')
                 ->columnSpan(2),
             Forms\Components\Select::make('position')
-                ->options([
-                    'head_script' => '🧠 Head Script (Auto Ads)',
-                    'ga4_tracking' => '📊 Google Analytics 4 (GA4)',
-                    'clarity_tracking' => '🔥 Microsoft Clarity (Heatmap)',
-                    'top' => '🔼 TOP - Breadcrumb Üstü',
-                    'mid' => '📄 MID - 3. Paragraf Sonrası',
-                    'bottom' => '🔽 BOTTOM - İçerik Sonu',
-                    'sidebar' => '📱 Sidebar',
-                    'sticky_bottom' => '📌 Sticky Mobile',
-                    'above_breadcrumb' => '🍞 Above Breadcrumb',
-                    'under_h1' => 'H1 Altı',
-                    'mid_content' => 'İçerik Ortası',
-                    'location_top' => 'Konum Üstü',
-                ])
+                ->options(\App\Models\GlobalAdBlock::POSITIONS)
                 ->required()
+                ->searchable()
                 ->label('Ad Slot Position')
                 ->helperText('Head Script = Google Auto Ads kodu. GA4/Clarity = Tracking kodlarınızı eksiksiz yapıştırın (<head> içine eklenir)'),
             Forms\Components\Select::make('network_type')

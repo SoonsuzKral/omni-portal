@@ -5,6 +5,8 @@
 
 @section('content')
 <article class="max-w-4xl mx-auto px-4 py-8">
+    <x-ad-renderer position="above_breadcrumb" />
+
     <nav class="flex mb-6 text-sm text-gray-500" aria-label="Breadcrumb">
         <ol class="flex items-center space-x-2">
             <li><a href="/" class="hover:text-indigo-400">{{ __('common.home') }}</a></li>
@@ -12,6 +14,8 @@
             <li class="text-gray-400">{{ __('common.about') }}</li>
         </ol>
     </nav>
+
+    <x-ad-renderer position="after_breadcrumb" />
 
     <!-- Ad Slot -->
     <div class="mb-6">
@@ -22,6 +26,8 @@
         <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">{{ __('common.about') }}</h1>
         <p class="text-xl text-gray-400">Türkiye'nin lokasyon bazlı akıllı hizmet rehberi</p>
     </header>
+
+    <x-ad-renderer position="under_h1" />
 
     <div class="prose prose-invert prose-indigo max-w-none text-gray-300 space-y-6">
         <div class="bg-indigo-900/20 border border-indigo-500/30 rounded-xl p-8 mb-8 text-center">
@@ -82,5 +88,7 @@
             <strong>Adres:</strong> OmviPortal Hizmetleri, İstanbul, Türkiye
         </p>
     </div>
+
+    <x-ad-renderer position="bottom" />
 </article>
 @endsection

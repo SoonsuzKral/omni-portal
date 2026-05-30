@@ -4,10 +4,14 @@
 
 @section('content')
 <div class="max-w-6xl mx-auto">
+    <x-ad-renderer position="above_breadcrumb" />
+
     <header class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6 border border-gray-100 dark:border-slate-700">
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white">All Categories</h1>
         <p class="text-gray-600 dark:text-gray-400">Browse all taxonomy categories in the portal.</p>
     </header>
+
+    <x-ad-renderer position="below_title" />
 
     <!-- Tree View Link -->
     <div class="mb-6">
@@ -18,6 +22,8 @@
     <div class="mb-6">
         <x-ad-renderer position="top" />
     </div>
+
+    <x-ad-renderer position="before_content_list" />
 
     <!-- Categories Grid -->
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -36,9 +42,13 @@
         @endforelse
     </div>
 
+    <x-ad-renderer position="after_content_list" />
+
     <!-- Pagination -->
     <div class="mt-8">
         {{ $taxonomies->links() }}
     </div>
+
+    <x-ad-renderer position="bottom" />
 </div>
 @endsection

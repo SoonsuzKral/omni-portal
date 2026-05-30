@@ -25,6 +25,8 @@
 
 @section('content')
 <div class="min-h-screen">
+    <x-ad-renderer position="above_breadcrumb" />
+
     <!-- HERO SECTION -->
     <section class="gradient-mesh relative">
         <div class="absolute inset-0 opacity-30 overflow-hidden">
@@ -135,6 +137,8 @@
         </div>
     </section>
 
+    <x-ad-renderer position="under_h1" />
+
     <!-- TRENDING TOPICS (dynamic from DB) -->
     <section class="max-w-7xl mx-auto px-4 py-12">
         <div class="flex items-center justify-between mb-8">
@@ -170,6 +174,8 @@
             @endforelse
         </div>
     </section>
+
+    <x-ad-renderer position="mid_content_1" />
 
     <!-- AD SPACE: LEADERBOARD -->
     <section class="max-w-7xl mx-auto px-4 pb-8">
@@ -304,6 +310,8 @@
             </div>
         </div>
     </section>
+
+    <x-ad-renderer position="bottom" />
 
     <!-- STATS FOOTER -->
     <section class="bg-gray-900 dark:bg-slate-950 text-white py-12">

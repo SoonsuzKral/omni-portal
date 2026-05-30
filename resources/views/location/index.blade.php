@@ -27,6 +27,8 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto">
+    <x-ad-renderer position="above_breadcrumb" />
+
     <!-- Breadcrumb -->
     <nav class="text-sm mb-6">
         <ol class="flex items-center flex-wrap gap-2">
@@ -35,6 +37,8 @@
             <li class="text-gray-600 dark:text-gray-300 font-medium">{{ $location->name }}</li>
         </ol>
     </nav>
+
+    <x-ad-renderer position="after_breadcrumb" />
 
     <!-- Header -->
     <header class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6 border border-gray-100 dark:border-slate-700">
@@ -49,10 +53,14 @@
         </div>
     </header>
 
+    <x-ad-renderer position="below_title" />
+
     <!-- Ad Slot -->
     <div class="mb-6">
         <x-ad-renderer :content="null" position="location_top" />
     </div>
+
+    <x-ad-renderer position="before_content_list" />
 
     <!-- Content List -->
     <div class="space-y-4">
@@ -95,11 +103,15 @@
         @endforelse
     </div>
 
+    <x-ad-renderer position="after_content_list" />
+
     <!-- Pagination -->
     @if($contents->hasPages())
         <div class="mt-8">
             {{ $contents->links() }}
         </div>
     @endif
+
+    <x-ad-renderer position="bottom" />
 </div>
 @endsection

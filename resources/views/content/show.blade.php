@@ -31,6 +31,7 @@
     }
 @endphp
 <article class="max-w-4xl mx-auto px-4 py-8">
+    <x-ad-renderer :content="$content" position="above_breadcrumb" />
     <x-ad-renderer :content="$content" position="header" />
 
     <nav class="flex mb-4 text-sm text-gray-500" aria-label="Breadcrumb">
@@ -52,6 +53,8 @@
         </div>
     </header>
 
+    <x-ad-renderer :content="$content" position="below_title" />
+
     <div class="prose prose-invert prose-indigo max-w-none mb-12 text-gray-300">
         @php
             // Clean body: remove non-primary location names (same as title cleanup)
@@ -71,6 +74,7 @@
             $paragraphs = preg_split('/(<\/p>)/', $cleanedBody, -1, PREG_SPLIT_DELIM_CAPTURE);
             $pCount = 0;
             $midAdPlaced = false;
+            $midAd2Placed = false;
         @endphp
         @foreach($paragraphs as $segment)
             @if(str_contains($segment, '</p>'))
@@ -82,6 +86,12 @@
                         <x-ad-renderer :content="$content" position="mid" />
                     </div>
                 @endif
+                @if($pCount === 7 && !$midAd2Placed)
+                    @php $midAd2Placed = true; @endphp
+                    <div class="my-6">
+                        <x-ad-renderer :content="$content" position="mid_content_1" />
+                    </div>
+                @endif
             @else
                 {!! $segment !!}
             @endif
@@ -89,6 +99,11 @@
         @if(!$midAdPlaced)
             <div class="my-6">
                 <x-ad-renderer :content="$content" position="mid" />
+            </div>
+        @endif
+        @if(!$midAd2Placed)
+            <div class="my-6">
+                <x-ad-renderer :content="$content" position="mid_content_1" />
             </div>
         @endif
     </div>
@@ -176,6 +191,8 @@
             $relatedCategories = $relatedCategories->concat($fallbackCats)->unique('id');
         }
     @endphp
+
+    <x-ad-renderer :content="$content" position="above_related" />
 
     @if($relatedDistricts->isNotEmpty() || $relatedCategories->isNotEmpty())
     <section class="mt-16 border-t border-gray-800 pt-10">
