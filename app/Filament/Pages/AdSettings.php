@@ -9,10 +9,12 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Form;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Cache;
 
 class AdSettings extends Page implements HasForms
 {
@@ -30,8 +32,10 @@ class AdSettings extends Page implements HasForms
     public function mount(): void
     {
         $adsTxt = LiveDataVault::where('key', 'ads_txt')->first();
+        $verificationEnabled = LiveDataVault::where('key', 'adsense_verification_enabled')->first();
         $this->form->fill([
             'ads_txt' => $adsTxt?->value ?? $this->getDefaultAdsTxt(),
+            'adsense_verification_enabled' => $verificationEnabled ? (bool) $verificationEnabled->value : false,
         ]);
     }
 
@@ -41,6 +45,17 @@ class AdSettings extends Page implements HasForms
 
         return $form
             ->schema([
+                Section::make('✅ AdSense Verification')
+                    ->description('Google AdSense doğrulama scriptini aç/kapat. Açıkken site <head> etiketine adsbygoogle.js scripti eklenir.')
+                    ->schema([
+                        Toggle::make('adsense_verification_enabled')
+                            ->label('AdSense Verification Active')
+                            ->helperText('Aktif edildiğinde: <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"> head etiketine eklenir.')
+                            ->onColor('success')
+                            ->offColor('danger')
+                            ->default(false),
+                    ]),
+
                 Section::make('📊 Ad Positions Overview')
                     ->description('Current status of all ad positions. Manage individual ad blocks in the Ad Blocks resource.')
                     ->schema([
@@ -85,11 +100,18 @@ class AdSettings extends Page implements HasForms
 
         LiveDataVault::updateOrCreate(
             ['key' => 'ads_txt'],
-            ['value' => $data['ads_txt'], 'data_type' => 'adsense']
+            ['value' => $data['ads_txt'] ?? '', 'data_type' => 'adsense']
         );
 
+        LiveDataVault::updateOrCreate(
+            ['key' => 'adsense_verification_enabled'],
+            ['value' => ($data['adsense_verification_enabled'] ?? false) ? '1' : '0', 'data_type' => 'adsense']
+        );
+
+        Cache::forget('adsense_verification_enabled');
+
         Notification::make()
-            ->title('ads.txt kaydedildi')
+            ->title('Ayarlar kaydedildi!')
             ->success()
             ->send();
     }

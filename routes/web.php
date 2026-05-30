@@ -42,13 +42,21 @@ Route::get('/robots.txt', function () {
 // ads.txt - Google AdSense verification (outside middleware, public)
 Route::get('/ads.txt', function () {
     $adsTxt = \App\Models\LiveDataVault::where('key', 'ads_txt')->first();
-    $adClient = config('services.adsense.ad_client');
     if ($adsTxt?->value) {
         $content = $adsTxt->value;
-    } elseif ($adClient) {
-        $content = "google.com, {$adClient}, DIRECT, f08c47fec0942fa0" . PHP_EOL;
     } else {
-        $content = '# ads.txt - ' . config('app.name') . PHP_EOL . '# Configure your AdSense publisher ID to enable.' . PHP_EOL;
+        $physicalFile = public_path('ads.txt');
+        if (file_exists($physicalFile)) {
+            $content = file_get_contents($physicalFile);
+        } else {
+            $adClient = config('services.adsense.ad_client');
+            if ($adClient) {
+                $pubId = str_replace('ca-', '', $adClient);
+                $content = "google.com, {$pubId}, DIRECT, f08c47fec0942fa0" . PHP_EOL;
+            } else {
+                $content = '# ads.txt - ' . config('app.name') . PHP_EOL . '# Configure your AdSense publisher ID to enable.' . PHP_EOL;
+            }
+        }
     }
     return response($content, 200, ['Content-Type' => 'text/plain']);
 });

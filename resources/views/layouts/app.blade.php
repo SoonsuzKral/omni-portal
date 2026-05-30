@@ -109,11 +109,20 @@
     @php
         $adClient = config('services.adsense.ad_client');
         $adsenseEnabled = config('services.adsense.enabled') && !empty($adClient);
+
+        $adsenseVerificationEnabled = \Illuminate\Support\Facades\Cache::remember('adsense_verification_enabled', 3600, function () {
+            $vault = \App\Models\LiveDataVault::where('key', 'adsense_verification_enabled')->first();
+            return $vault ? (bool) $vault->value : false;
+        });
+
         $gaId = config('services.google_analytics.measurement_id');
     @endphp
 
+    @if($adsenseEnabled || $adsenseVerificationEnabled)
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $adClient ?? 'ca-pub-9882423372138514' }}" crossorigin="anonymous"></script>
+    @endif
+
     @if($adsenseEnabled)
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $adClient }}" crossorigin="anonymous"></script>
     <script>
         (adsbygoogle = window.adsbygoogle || []).push({
             google_ad_client: "{{ $adClient }}",
