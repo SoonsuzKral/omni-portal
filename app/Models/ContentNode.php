@@ -23,6 +23,8 @@ class ContentNode extends Model
         'crawl_priority_breakdown',
         'publish_date',
         'locale',
+        'language',
+        'source',
         'gsc_first_discovered_at',
         'gsc_first_crawled_at',
         'gsc_first_indexed_at',
