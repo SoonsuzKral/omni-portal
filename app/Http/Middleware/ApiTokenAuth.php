@@ -20,11 +20,15 @@ class ApiTokenAuth
 
             $staticToken = config('app.omni_api_token');
             if ($staticToken && hash_equals($staticToken, $bearer)) {
-                $user = User::where('email', 'admin@omviportal.com')->first();
-                if ($user) {
-                    auth()->login($user);
-                    return $next($request);
-                }
+                $user = User::firstOrCreate(
+                    ['email' => 'admin@omviportal.com'],
+                    [
+                        'name' => 'Admin',
+                        'password' => bcrypt(\Illuminate\Support\Str::random(32)),
+                    ]
+                );
+                auth()->login($user);
+                return $next($request);
             }
         }
 

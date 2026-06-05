@@ -1,0 +1,41 @@
+========================================
+ OMVI PORTAL - HOSTINGER KURULUM TALIMATI
+========================================
+
+ADIM 1: FileZilla'yi ac ve sunucuna baglan
+
+ADIM 2: Sunucuda /home/u389331892/ klasorune git
+
+ADIM 3: Bu 2 klasoru sunucuya SURUKLE-BIRAK yap:
+  - laravel/     --> /home/u389331892/laravel/
+  - public_html/ --> /home/u389331892/public_html/
+
+ADIM 4: Hostinger cPanel'e gir > MySQL Databases
+  - Yeni bir database OLUSTUR (veya var olani kullan)
+  - .env dosyasindaki DB bilgilerini guncelle:
+    * DB_DATABASE= (MySQL Database adi)
+    * DB_USERNAME= (MySQL kullanici adi)
+    * DB_PASSWORD= (MySQL sifresi)
+
+ADIM 5: Hostinger cPanel > Terminal (veya SSH) ac:
+
+  # Laravel ayarlari
+  cd /home/u389331892/laravel
+  /usr/local/bin/php81 artisan key:generate
+  /usr/local/bin/php81 artisan config:cache
+  /usr/local/bin/php81 artisan route:cache
+  /usr/local/bin/php81 artisan view:cache
+  /usr/local/bin/php81 artisan migrate --force
+
+ADIM 6: Siteyi kontrol et: https://omviportal.com
+
+========================================
+ LOCAL BOTLARDAN VERI GONDERME
+========================================
+
+Botlar bilgisayarINDAN calisacak:
+  python TrendSense_Bot.py --quick
+  python bots/akilli_bot.py --quick
+
+Botlar API uzerinden https://omviportal.com adresine veri gonderecek.
+API token hazir -> OMNI_API_TOKEN=iVLpTL6FVkDfl7IBq0yi6HD4QGUA0erM4bhWHOY6e8f0fd34

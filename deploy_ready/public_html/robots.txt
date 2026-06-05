@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_debugbar/
+Disallow: /_ignition/
+
+Sitemap: https://omviportal.com/sitemap.xml
+Sitemap: https://omviportal.com/sitemap-categories.xml
+Sitemap: https://omviportal.com/sitemap-locations.xml

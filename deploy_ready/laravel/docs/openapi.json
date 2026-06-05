@@ -1,0 +1,423 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Omni-Portal API",
+    "description": "Programmatic SEO platform API for external bot ingestion. Used for generating millions of niche landing pages automatically.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Omni-Portal Team",
+      "email": "api@omni-portal.local"
+    }
+  },
+  "servers": [
+    {
+      "url": "{protocol}://{host}:{port}{basePath}",
+      "variables": {
+        "protocol": {
+          "default": "https",
+          "enum": ["http", "https"]
+        },
+        "host": {
+          "default": "localhost"
+        },
+        "port": {
+          "default": "8000"
+        },
+        "basePath": {
+          "default": "/api"
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": ["System"],
+        "summary": "Health check endpoint",
+        "description": "Returns API status and configuration",
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {"type": "string", "example": "ok"},
+                    "timestamp": {"type": "string", "example": "2026-05-17T10:00:00+00:00"},
+                    "version": {"type": "string", "example": "1.0.0"},
+                    "queue_driver": {"type": "string", "example": "sync"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/stats": {
+      "get": {
+        "tags": ["System"],
+        "summary": "Get system statistics",
+        "description": "Returns counts of all entities in the system",
+        "operationId": "getStats",
+        "responses": {
+          "200": {
+            "description": "Statistics returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "taxonomies": {"type": "integer"},
+                    "locations": {"type": "integer"},
+                    "content_nodes": {"type": "integer"},
+                    "keywords": {"type": "integer"},
+                    "live_data": {"type": "integer"},
+                    "post_templates": {"type": "integer"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/token": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Generate API token",
+        "description": "Generate Sanctum token for API access. Use the returned token in Authorization header: Bearer {token}",
+        "operationId": "createToken",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": {"type": "string", "format": "email", "example": "test@example.com"},
+                  "password": {"type": "string", "format": "password", "example": "password"},
+                  "device_name": {"type": "string", "example": "Python Bot"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {"type": "boolean"},
+                    "message": {"type": "string"},
+                    "token": {"type": "string"},
+                    "token_type": {"type": "string", "example": "Bearer"}
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          }
+        }
+      }
+    },
+    "/v1/auth/me": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get current authenticated user",
+        "description": "Returns current user info and active tokens",
+        "operationId": "getMe",
+        "security": [{"Sanctum": []}],
+        "responses": {
+          "200": {
+            "description": "User info returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {"type": "object"},
+                    "tokens": {"type": "array"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/revoke": {
+      "delete": {
+        "tags": ["Auth"],
+        "summary": "Revoke current token",
+        "description": "Revoke the token used in the current request",
+        "operationId": "revokeToken",
+        "security": [{"Sanctum": []}],
+        "responses": {
+          "200": {
+            "description": "Token revoked"
+          }
+        }
+      }
+    },
+    "/v1/auth/revoke-all": {
+      "delete": {
+        "tags": ["Auth"],
+        "summary": "Revoke all tokens",
+        "description": "Revoke all tokens for the current user (logout from all devices)",
+        "operationId": "revokeAllTokens",
+        "security": [{"Sanctum": []}],
+        "responses": {
+          "200": {
+            "description": "All tokens revoked"
+          }
+        }
+      }
+    },
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ingest/status": {
+      "get": {
+        "tags": ["Ingest"],
+        "summary": "Get system status and counts",
+        "description": "Returns current counts of content nodes, taxonomies, and locations",
+        "operationId": "getStatus",
+        "security": [{"Sanctum": []}],
+        "responses": {
+          "200": {
+            "description": "Status retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {"type": "string"},
+                    "totals": {
+                      "type": "object",
+                      "properties": {
+                        "content_nodes": {"type": "integer"},
+                        "taxonomies": {"type": "integer"},
+                        "locations": {"type": "integer"}
+                      }
+                    },
+                    "queue": {
+                      "type": "object",
+                      "properties": {
+                        "driver": {"type": "string"},
+                        "connection": {"type": "string"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ingest": {
+      "post": {
+        "tags": ["Ingest"],
+        "summary": "Bulk data ingestion",
+        "description": "Upload taxonomies, locations, content nodes, live data, and post templates. Automatically routes to async queue if items > 50.",
+        "operationId": "bulkIngest",
+        "security": [{"Sanctum": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "taxonomies": {
+                    "type": "array",
+                    "items": {"$ref": "#/components/schemas/TaxonomyInput"},
+                    "description": "Optional array of taxonomy objects"
+                  },
+                  "locations": {
+                    "type": "array",
+                    "items": {"$ref": "#/components/schemas/LocationInput"},
+                    "description": "Optional array of location objects"
+                  },
+                  "content_nodes": {
+                    "type": "array",
+                    "items": {"$ref": "#/components/schemas/ContentNodeInput"},
+                    "description": "Optional array of content node objects"
+                  },
+                  "live_data": {
+                    "type": "array",
+                    "items": {"$ref": "#/components/schemas/LiveDataInput"},
+                    "description": "Optional array of live data key-value pairs"
+                  },
+                  "post_templates": {
+                    "type": "array",
+                    "items": {"$ref": "#/components/schemas/PostTemplateInput"},
+                    "description": "Optional array of post template objects"
+                  }
+                }
+              },
+              "example": {
+                "taxonomies": [
+                  {"name": "Kombi", "slug": "kombi", "parent_slug": null}
+                ],
+                "locations": [
+                  {"name": "İstanbul", "slug": "istanbul", "parent_slug": null}
+                ],
+                "content_nodes": [
+                  {
+                    "title": "İstanbul Kombi Servisi",
+                    "body_content": "<p>En iyi kombi servisi...</p>",
+                    "taxonomy_slug": "kombi",
+                    "location_slug": "istanbul"
+                  }
+                ],
+                "live_data": [
+                  {"key": "usd_try", "value": "32.50", "display_name": "Dolar TL"}
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Bulk ingestion completed (sync)",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/IngestResponse"}
+              }
+            }
+          },
+          "202": {
+            "description": "Bulk ingestion queued (async)",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/AsyncResponse"}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {"type": "string"},
+                    "errors": {"type": "object"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "Sanctum": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "Bearer token for Sanctum authentication. Create token via: POST /api/v1/auth/token"
+      }
+    },
+    "schemas": {
+      "TaxonomyInput": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {"type": "string", "maxLength": 255, "example": "Kombi"},
+          "slug": {"type": "string", "maxLength": 255, "pattern": "^[a-z0-9-]+$", "example": "kombi"},
+          "parent_slug": {"type": "string", "pattern": "^[a-z0-9-]+$", "nullable": true, "example": "isitma"}
+        }
+      },
+      "LocationInput": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {"type": "string", "maxLength": 255, "example": "İstanbul"},
+          "slug": {"type": "string", "maxLength": 255, "pattern": "^[a-z0-9-]+$", "example": "istanbul"},
+          "parent_slug": {"type": "string", "pattern": "^[a-z0-9-]+$", "nullable": true, "example": null}
+        }
+      },
+      "ContentNodeInput": {
+        "type": "object",
+        "required": ["title", "body_content", "taxonomy_slug", "location_slug"],
+        "properties": {
+          "title": {"type": "string", "maxLength": 255, "example": "İstanbul Kombi Servisi"},
+          "slug": {"type": "string", "maxLength": 255, "pattern": "^[a-z0-9-]+$", "nullable": true, "description": "Auto-generated if not provided"},
+          "body_content": {"type": "string", "example": "<p>En iyi kombi servisi...</p>"},
+          "taxonomy_slug": {"type": "string", "example": "kombi"},
+          "location_slug": {"type": "string", "example": "istanbul"},
+          "template_slug": {"type": "string", "nullable": true, "example": "servis-sablonu"},
+          "is_restricted_content": {"type": "boolean", "default": false, "description": "Flag for ad policy routing"},
+          "publish_date": {"type": "string", "format": "date-time", "nullable": true},
+          "meta_description": {"type": "string", "nullable": true},
+          "featured_image": {"type": "string", "nullable": true}
+        }
+      },
+      "LiveDataInput": {
+        "type": "object",
+        "required": ["key", "value"],
+        "properties": {
+          "key": {"type": "string", "maxLength": 255, "pattern": "^[a-z0-9_]+$", "example": "usd_try"},
+          "value": {"type": "string", "example": "32.50"},
+          "display_name": {"type": "string", "maxLength": 255, "nullable": true, "example": "Dolar TL"}
+        }
+      },
+      "PostTemplateInput": {
+        "type": "object",
+        "required": ["name", "template_body"],
+        "properties": {
+          "name": {"type": "string", "maxLength": 255, "example": "Servis Şablonu"},
+          "slug": {"type": "string", "maxLength": 255, "pattern": "^[a-z0-9-]+$", "nullable": true},
+          "template_body": {"type": "string", "example": "<h1>{{title}}</h1><p>{{content}}</p>"},
+          "taxonomy_slug": {"type": "string", "nullable": true}
+        }
+      },
+      "IngestResponse": {
+        "type": "object",
+        "properties": {
+          "success": {"type": "boolean"},
+          "message": {"type": "string"},
+          "results": {
+            "type": "object",
+            "properties": {
+              "taxonomies": {"type": "array", "items": {"type": "object"}},
+              "locations": {"type": "array", "items": {"type": "object"}},
+              "content_nodes": {"type": "array", "items": {"type": "object"}},
+              "live_data": {"type": "array", "items": {"type": "object"}},
+              "post_templates": {"type": "array", "items": {"type": "object"}},
+              "errors": {"type": "array", "items": {"type": "object"}}
+            }
+          }
+        }
+      },
+      "AsyncResponse": {
+        "type": "object",
+        "properties": {
+          "success": {"type": "boolean"},
+          "message": {"type": "string"},
+          "status": {"type": "string"},
+          "estimated_time": {"type": "string"},
+          "track_with": {"type": "string"}
+        }
+      }
+    }
+  }
+}
