@@ -58,6 +58,9 @@ class IngestController extends Controller
             'content_nodes.*.is_restricted_content' => 'sometimes|boolean',
             'content_nodes.*.publish_date' => 'sometimes|date',
             'content_nodes.*.published_at' => 'sometimes|date',
+            'content_nodes.*.meta_description' => 'sometimes|string|max:320',
+            'content_nodes.*.language' => 'sometimes|string|max:5',
+            'content_nodes.*.source' => 'sometimes|string|max:50',
 
             'nodes' => 'sometimes|array',
             'nodes.*.title' => 'required|string|max:255',
@@ -266,6 +269,8 @@ class IngestController extends Controller
                             'meta_description' => $node['meta_description'] ?? null,
                             'featured_image' => $node['featured_image'] ?? null,
                             'is_restricted_content' => $node['is_restricted_content'] ?? false,
+                            'language' => $node['language'] ?? config('app.locale', 'tr'),
+                            'source' => $node['source'] ?? 'api',
                             'publish_date' => $publishDate,
                         ]
                     );

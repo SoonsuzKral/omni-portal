@@ -15,6 +15,7 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class AdSettings extends Page implements HasForms
 {
@@ -33,9 +34,18 @@ class AdSettings extends Page implements HasForms
     {
         $adsTxt = LiveDataVault::where('key', 'ads_txt')->first();
         $verificationEnabled = LiveDataVault::where('key', 'adsense_verification_enabled')->first();
+        $testMode = LiveDataVault::where('key', 'ads_test_mode')->first();
+
+        Log::debug('AdSettings.mount', [
+            'ads_txt_exists' => !is_null($adsTxt),
+            'verification_raw' => $verificationEnabled?->value,
+            'test_mode_raw' => $testMode?->value,
+        ]);
+
         $this->form->fill([
             'ads_txt' => $adsTxt?->value ?? $this->getDefaultAdsTxt(),
             'adsense_verification_enabled' => $verificationEnabled ? (bool) $verificationEnabled->value : false,
+            'ads_test_mode' => $testMode ? ($testMode->value === '1') : false,
         ]);
     }
 
@@ -53,6 +63,17 @@ class AdSettings extends Page implements HasForms
                             ->helperText('Aktif edildiğinde: <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"> head etiketine eklenir.')
                             ->onColor('success')
                             ->offColor('danger')
+                            ->default(false),
+                    ]),
+
+                Section::make('🧪 Test Modu')
+                    ->description('Aktif edildiğinde tüm reklam slotları yerine test kutuları gösterilir (gerçek reklam gösterilmez).')
+                    ->schema([
+                        Toggle::make('ads_test_mode')
+                            ->label('Ad Test Mode (Aktif)')
+                            ->helperText('AÇIK: Tüm <x-ad-slot> bileşenleri gri test kutuları gösterir. KAPALI: Normal reklam akışı devam eder.')
+                            ->onColor('warning')
+                            ->offColor('gray')
                             ->default(false),
                     ]),
 
@@ -96,24 +117,97 @@ class AdSettings extends Page implements HasForms
 
     public function save(): void
     {
-        $data = $this->form->getState();
+        try {
+            Log::debug('AdSettings.save.started', ['data' => $this->data]);
 
-        LiveDataVault::updateOrCreate(
-            ['key' => 'ads_txt'],
-            ['value' => $data['ads_txt'] ?? '', 'data_type' => 'adsense']
-        );
+            $data = $this->form->getState();
 
-        LiveDataVault::updateOrCreate(
-            ['key' => 'adsense_verification_enabled'],
-            ['value' => ($data['adsense_verification_enabled'] ?? false) ? '1' : '0', 'data_type' => 'adsense']
-        );
+            Log::debug('AdSettings.save.getState', ['state' => $data]);
 
-        Cache::forget('adsense_verification_enabled');
+            $adsTxtRecord = LiveDataVault::updateOrCreate(
+                ['key' => 'ads_txt'],
+                ['value' => $data['ads_txt'] ?? '', 'data_type' => 'string']
+            );
 
-        Notification::make()
-            ->title('Ayarlar kaydedildi!')
-            ->success()
-            ->send();
+            Log::debug('AdSettings.save.ads_txt', [
+                'id' => $adsTxtRecord->id,
+                'value_len' => strlen($adsTxtRecord->value),
+            ]);
+
+            $rawFormVal = $data['ads_test_mode'] ?? false;
+            $testModeOn = $rawFormVal ? '1' : '0';
+
+            Log::debug('AdSettings.save.test_mode', [
+                'raw_form_value' => $rawFormVal,
+                'will_save' => $testModeOn,
+            ]);
+
+            $testRecord = LiveDataVault::updateOrCreate(
+                ['key' => 'ads_test_mode'],
+                ['value' => $testModeOn, 'data_type' => 'boolean']
+            );
+
+            Log::debug('AdSettings.save.test_mode.result', [
+                'id' => $testRecord->id,
+                'saved_value' => $testRecord->value,
+                'was_dirty' => $testRecord->wasChanged('value'),
+            ]);
+
+            if ($testModeOn === '0') {
+                $verRecord = LiveDataVault::updateOrCreate(
+                    ['key' => 'adsense_verification_enabled'],
+                    ['value' => '1', 'data_type' => 'boolean']
+                );
+                Log::debug('AdSettings.save.verification.auto_enabled', [
+                    'id' => $verRecord->id,
+                    'value' => $verRecord->value,
+                ]);
+                Notification::make()
+                    ->title('Test Modu Kapatıldı & AdSense Verification Aktif!')
+                    ->body('Test modu kapatıldı ve AdSense Verification Active otomatik olarak etkinleştirildi.')
+                    ->success()
+                    ->send();
+            } else {
+                $verValue = ($data['adsense_verification_enabled'] ?? false) ? '1' : '0';
+                $verRecord = LiveDataVault::updateOrCreate(
+                    ['key' => 'adsense_verification_enabled'],
+                    ['value' => $verValue, 'data_type' => 'boolean']
+                );
+                Log::debug('AdSettings.save.verification.manual', [
+                    'id' => $verRecord->id,
+                    'value' => $verRecord->value,
+                ]);
+                Notification::make()
+                    ->title('Ayarlar kaydedildi!')
+                    ->success()
+                    ->send();
+            }
+
+            // Verify by re-reading from DB
+            $verifyTestMode = LiveDataVault::where('key', 'ads_test_mode')->first();
+            $verifyVerification = LiveDataVault::where('key', 'adsense_verification_enabled')->first();
+            Log::debug('AdSettings.save.verify', [
+                'ads_test_mode.value' => $verifyTestMode?->value,
+                'adsense_verification_enabled.value' => $verifyVerification?->value,
+            ]);
+
+            Cache::forget('adsense_verification_enabled');
+            Cache::forget('ads_test_mode');
+            Cache::flush();
+
+            Log::debug('AdSettings.save.completed');
+        } catch (\Throwable $e) {
+            Log::error('AdSettings.save.error', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+            Notification::make()
+                ->title('Hata: Kaydetme başarısız!')
+                ->body($e->getMessage())
+                ->danger()
+                ->send();
+        }
     }
 
     private function getPositionStats(): array

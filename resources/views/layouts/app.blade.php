@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ in_array(app()->getLocale(), ['ar']) ? 'rtl' : 'ltr' }}" class="scroll-smooth">
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9882423372138514" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -82,48 +81,19 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <style>
-        .ad-sidebar .ad-zone-container {
-            min-height: 250px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .ad-sidebar ins.adsbygoogle {
-            min-width: 120px;
-            min-height: 240px;
-        }
-        [dir="rtl"] .ad-sidebar-left { order: 2; }
-        [dir="rtl"] .ad-sidebar-right { order: 0; }
-        .ad-layout-wrapper {
-            flex-direction: row;
-        }
-        @media (max-width: 1023px) {
-            .ad-layout-wrapper {
-                flex-direction: column;
-            }
-        }
-    </style>
-
     @stack('head')
 
     @php
         $adClient = config('services.adsense.ad_client');
-        $adsenseEnabled = config('services.adsense.enabled') && !empty($adClient);
-
-        $adsenseVerificationEnabled = \Illuminate\Support\Facades\Cache::remember('adsense_verification_enabled', 3600, function () {
-            $vault = \App\Models\LiveDataVault::where('key', 'adsense_verification_enabled')->first();
-            return $vault ? (bool) $vault->value : false;
+        $adsenseVerificationEnabled = \Illuminate\Support\Facades\Cache::remember('adsense_verification_enabled', 60, function () {
+            return (bool) \App\Models\LiveDataVault::where('key', 'adsense_verification_enabled')->value('value');
         });
-
+        $adsenseEnabled = !empty($adClient) && $adsenseVerificationEnabled;
         $gaId = config('services.google_analytics.measurement_id');
     @endphp
 
-    @if($adsenseEnabled || $adsenseVerificationEnabled)
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $adClient ?? 'ca-pub-9882423372138514' }}" crossorigin="anonymous"></script>
-    @endif
-
     @if($adsenseEnabled)
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ $adClient }}" crossorigin="anonymous"></script>
     <script>
         (adsbygoogle = window.adsbygoogle || []).push({
             google_ad_client: "{{ $adClient }}",
@@ -178,7 +148,7 @@
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
-                    <a href="{{ url('/') }}" class="text-xl md:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                    <a href="{{ url('/') }}" class="text-xl md:text-2xl font-bold text-indigo-600 dark:text-indigo-400">
                         {{ config('app.name') }}
                     </a>
                 </div>
@@ -276,31 +246,9 @@
         </div>
     </nav>
 
-    <div class="max-w-7xl mx-auto px-4 py-6">
-        <div class="flex gap-4 lg:gap-6 ad-layout-wrapper">
-            <aside class="ad-sidebar ad-sidebar-left hidden xl:block w-[160px] shrink-0">
-                <div class="sticky top-20 space-y-6">
-                    <x-ad-renderer position="left_sidebar_top" />
-                    <x-ad-renderer position="left_sidebar_mid" />
-                    <x-ad-renderer position="left_sidebar_bottom" />
-                </div>
-            </aside>
-
-            <main class="flex-1 min-w-0">
-                <x-ad-renderer position="above_content" />
-                @yield('content')
-                <x-ad-renderer position="below_content" />
-            </main>
-
-            <aside class="ad-sidebar ad-sidebar-right hidden lg:block w-[160px] xl:w-[200px] shrink-0">
-                <div class="sticky top-20 space-y-6">
-                    <x-ad-renderer position="right_sidebar_top" />
-                    <x-ad-renderer position="right_sidebar_mid" />
-                    <x-ad-renderer position="right_sidebar_bottom" />
-                </div>
-            </aside>
-        </div>
-    </div>
+    <main class="container mx-auto px-4 py-6">
+        @yield('content')
+    </main>
 
     @php $footerSlot = config('services.adsense.footer_slot'); @endphp
     @if($adsenseEnabled && !empty($footerSlot))
@@ -317,7 +265,6 @@
     </div>
     @endif
 
-    <x-ad-renderer position="above_footer" />
     <x-ad-renderer position="global_footer" />
 
     <footer class="bg-gray-900 dark:bg-slate-950 text-gray-300 dark:text-gray-400 py-12 mt-12">

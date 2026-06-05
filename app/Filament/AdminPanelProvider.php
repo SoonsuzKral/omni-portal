@@ -49,8 +49,7 @@ class AdminPanelProvider extends PanelProvider
                 'success' => Color::Emerald,
                 'warning' => Color::Amber,
             ])
-            ->defaultThemeMode(ThemeMode::System)
-            ->brandName('🚀 Omni Portal')
+            ->brandName('🚀 Omvi Portal')
             ->brandLogo(fn () => view('filament.brand-logo'))
             ->brandLogoHeight('2.5rem')
             ->favicon(asset('favicon.svg'))
@@ -130,8 +129,9 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([BaseAuthenticate::class])
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('20rem')
+            ->sidebarFullyCollapsibleOnDesktop()
             ->maxContentWidth('full')
             ->breadcrumbs(false)
-            ->topNavigation(fn () => true);
+            ->defaultThemeMode(ThemeMode::Dark);
     }
 }

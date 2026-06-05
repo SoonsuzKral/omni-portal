@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin.ip' => \App\Http\Middleware\AdminIpWhitelist::class,
             'response.cache' => \App\Http\Middleware\ResponseCache::class,
             'traffic.leak.prevention' => \App\Http\Middleware\TrafficLeakPrevention::class,
+            'api.token' => \App\Http\Middleware\ApiTokenAuth::class,
         ]);
 
         $middleware->web(prepend: [

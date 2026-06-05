@@ -95,7 +95,11 @@ class ImageAutoStub
         $url = "https://picsum.photos/seed/{$seed}/800/600";
 
         try {
-            $response = Http::timeout(5)->head($url);
+            $request = Http::timeout(5);
+            if (app()->environment('local')) {
+                $request->withoutVerifying();
+            }
+            $response = $request->get($url);
             if ($response->successful()) {
                 return $url;
             }

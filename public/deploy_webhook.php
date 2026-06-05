@@ -1,6 +1,6 @@
 <?php
 /**
- * Omni Portal - GitHub Webhook Deployment Trigger
+ * Omvi Portal - GitHub Webhook Deployment Trigger
  * 
  * Place in: public/deploy_webhook.php
  * GitHub Repo > Settings > Webhooks > Add webhook:

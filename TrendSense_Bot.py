@@ -1078,6 +1078,8 @@ class ApiClient:
                 "slug": node["slug"],
                 "body_content": node.get("body_content") or f"{node['title']} hakkında güncel bilgiler.",
                 "meta_description": node.get("meta_description", "")[:320],
+                "language": node.get("language", "tr"),
+                "source": node.get("source", "trendsense"),
                 "taxonomy_slug": tax_slug,
                 "is_restricted_content": node.get("is_restricted_content", False),
             }

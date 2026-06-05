@@ -21,7 +21,7 @@ class ResponseCache
 
     public function handle(Request $request, Closure $next): Response
     {
-        if ($this->shouldNotCache($request)) {
+        if ($this->shouldNotCache($request) || app()->environment('local')) {
             return $next($request);
         }
 
@@ -80,8 +80,11 @@ class ResponseCache
         $path = $request->getPathInfo();
         $query = $request->getQueryString() ?? '';
         $locale = app()->getLocale();
+        $testMode = Cache::remember('ads_test_mode', 60, function () {
+            return \App\Models\LiveDataVault::where('key', 'ads_test_mode')->value('value') === '1';
+        }) ? '1' : '0';
 
-        return 'response:' . md5($locale . $path . $query);
+        return 'response:' . md5($locale . $path . $query . $testMode);
     }
 
     protected function shouldCacheResponse(Response $response): bool

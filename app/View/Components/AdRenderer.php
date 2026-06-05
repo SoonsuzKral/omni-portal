@@ -3,6 +3,7 @@
 namespace App\View\Components;
 
 use App\Models\GlobalAdBlock;
+use App\Models\LiveDataVault;
 use Illuminate\View\Component;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
@@ -14,6 +15,7 @@ class AdRenderer extends Component
     public $restricted = false;
     public $containerId;
     public $containerClass;
+    public $testMode;
 
     public function __construct($content = null, $position = 'header', $restricted = false)
     {
@@ -22,10 +24,17 @@ class AdRenderer extends Component
         $this->restricted = $restricted;
         $this->containerId = 'c-item-' . rand(100, 999);
         $this->containerClass = 'wrapper-node-' . Str::random(4);
+        $this->testMode = Cache::remember('ads_test_mode', 60, function () {
+            return LiveDataVault::where('key', 'ads_test_mode')->value('value') === '1';
+        });
     }
 
     public function scripts(): array
     {
+        if ($this->testMode) {
+            return [];
+        }
+
         $position = $this->position;
         $cacheKey = 'ad_scripts_' . $position . '_' . ($this->content?->id ?? '0') . '_' . ($this->isRestricted() ? '1' : '0');
 
@@ -83,7 +92,8 @@ class AdRenderer extends Component
     public function render()
     {
         return view('components.ad-renderer', [
-            'scripts' => $this->scripts()
+            'scripts' => $this->scripts(),
+            'testMode' => $this->testMode,
         ]);
     }
 }

@@ -50,7 +50,7 @@ class IndexCoverageWidget extends BaseWidget
                 ->color($crawlEff >= 90 ? 'success' : 'warning'),
 
             Stat::make('Sitemap Efficiency', number_format($sitemapEff, 1) . '%')
-                ->icon('heroicon-o-sitemap')
+                ->icon('heroicon-o-circle-stack')
                 ->color($sitemapEff >= 80 ? 'success' : 'warning'),
 
             Stat::make('Active Anomalies', number_format($activeAnomalies))

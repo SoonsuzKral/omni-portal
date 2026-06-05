@@ -25,7 +25,7 @@ Route::post('/v1/auth/token', [AuthController::class, 'token'])
     ->middleware('throttle:login');
 
 // Protected endpoints (require Sanctum token)
-Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
+Route::middleware(['api.token', 'throttle:60,1'])->group(function () {
     // Ingest
     Route::post('/v1/ingest', [IngestController::class, 'store']);
 

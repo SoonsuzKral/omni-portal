@@ -19,12 +19,15 @@ class SecurityHeaders
         $response->headers->set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
 
         // Content Security Policy - AdSense uyumlu
+        $isLocal = app()->environment('local');
+        $viteScript = $isLocal ? 'http://localhost:5173 http://127.0.0.1:5173' : '';
+        $viteConnect = $isLocal ? 'http://localhost:5173 http://127.0.0.1:5173 ws://localhost:5173 ws://127.0.0.1:5173' : '';
         $csp = "default-src 'self'; " .
-               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://www.googletagmanager.com https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://fonts.googleapis.com https://www.google.com https://www.gstatic.com; " .
+               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://www.googletagmanager.com https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://fonts.googleapis.com https://www.google.com https://www.gstatic.com {$viteScript}; " .
                "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://pagead2.googlesyndication.com; " .
-               "img-src 'self' data: https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://*.googleusercontent.com https://tpc.googleservices.com; " .
+               "img-src 'self' data: blob: https: http://127.0.0.1:5173 http://localhost:5173; " .
                "frame-src 'self' https://googleads.g.doubleclick.net https://pagead2.googlesyndication.com; " .
-               "connect-src 'self' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://www.google-analytics.com https://www.googletagmanager.com; " .
+               "connect-src 'self' https://pagead2.googlesyndication.com https://partner.googleadservices.com https://googleads.g.doubleclick.net https://adservice.google.com https://*.googlesyndication.com https://google-analytics.com https://www.google-analytics.com https://*.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://stats.g.doubleclick.net {$viteConnect}; " .
                "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; " .
                "object-src 'none'; " .
                "base-uri 'self'; " .

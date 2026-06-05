@@ -89,39 +89,27 @@ class ImageHelper
 
     protected function fetchRelevantImage(array $keywords): ?string
     {
-        $cacheKey = 'image_fetch:' . md5(implode(',', $keywords));
+        $seed = md5(implode(',', $keywords));
+        $url = "https://picsum.photos/seed/{$seed}/1200/630";
 
-        return Cache::remember($cacheKey, self::CACHE_TTL, function () use ($keywords) {
-            $seed = md5(implode(',', $keywords));
-            $url = "https://picsum.photos/seed/{$seed}/1200/630";
-
-            try {
-                $response = Http::timeout(3)->head($url);
-                if ($response->successful()) {
-                    return $url;
-                }
-            } catch (\Exception $e) {
-                Log::debug("Image fetch failed: " . $e->getMessage());
+        try {
+            $request = Http::timeout(5);
+            if (app()->environment('local')) {
+                $request->withoutVerifying();
             }
+            $response = $request->get($url);
+            if ($response->successful()) {
+                return $url;
+            }
+        } catch (\Exception $e) {
+            Log::debug("Image fetch failed: " . $e->getMessage());
+        }
 
-            return $this->tryUnsplashDirect($keywords);
-        });
+        return $this->generateDynamicPlaceholder($keywords);
     }
 
     protected function tryUnsplashDirect(array $keywords): ?string
     {
-        $query = implode('+', array_slice($keywords, 0, 2));
-        $url = "https://source.unsplash.com/1200x630/?{$query}";
-
-        try {
-            $response = Http::timeout(3)->head($url);
-            if ($response->successful() && !$response->header('content-type', '')->contains('image/svg')) {
-                return $url;
-            }
-        } catch (\Exception $e) {
-            Log::debug("Unsplash fallback failed: " . $e->getMessage());
-        }
-
         return null;
     }
 
@@ -157,7 +145,7 @@ class ImageHelper
             <circle cx="650" cy="320" r="120" fill="rgba(255,255,255,0.08)"/>
             <circle cx="400" cy="210" r="150" fill="rgba(255,255,255,0.05)"/>
             <text x="400" y="220" font-family="Arial, sans-serif" font-size="42" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">' . htmlspecialchars($text) . '</text>
-            <text x="400" y="380" font-family="Arial, sans-serif" font-size="18" fill="rgba(255,255,255,0.7)" text-anchor="middle">Omni Portal</text>
+            <text x="400" y="380" font-family="Arial, sans-serif" font-size="18" fill="rgba(255,255,255,0.7)" text-anchor="middle">Omvi Portal</text>
         </svg>';
 
         return 'data:image/svg+xml;base64,' . base64_encode($svg);
@@ -187,7 +175,7 @@ class ImageHelper
         $location = $content->location?->name ?? 'Global';
         $keyword = $content->taxonomy?->name ?? 'Content';
 
-        return "{$location} {$keyword} - " . config('app.name', 'Omni Portal');
+        return "{$location} {$keyword} - " . config('app.name', 'Omvi Portal');
     }
 
     public function batchProcess(array $contentIds): int

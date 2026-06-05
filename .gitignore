@@ -24,3 +24,13 @@ Homestead.yaml
 Thumbs.db
 /storage/google-service-account.json
 **/__pycache__/
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+/cacert.pem
+/check_env.php
+/sitemap_*.xml
+/niche_matrix_*.json
+/omni_*.json
+/trendsense_*.json
+/akilli_checkpoint.json
+/*.zip

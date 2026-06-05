@@ -5,12 +5,14 @@
 
     RewriteEngine On
 
-    # Redirect HTTP -> HTTPS
+    # Redirect HTTP -> HTTPS (skip local/dev hosts)
     RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP_HOST} !^(127\.0\.0\.1|localhost|::1)(:[0-9]+)?$ [NC]
     RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
-    # Redirect www -> non-www
+    # Redirect www -> non-www (skip local/dev hosts)
     RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteCond %{HTTP_HOST} !^(www\.)?(127\.0\.0\.1|localhost|::1)(:[0-9]+)?$ [NC]
     RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 
     # Handle Authorization Header

@@ -21,6 +21,8 @@ return [
 
     'gsc_verification' => env('GSC_VERIFICATION', ''),
 
+    'omni_api_token' => env('OMNI_API_TOKEN', ''),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

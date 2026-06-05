@@ -46,7 +46,7 @@ return [
 
     'adsense' => [
         'publisher_id' => env('ADSENSE_PUBLISHER_ID'),
-        'ad_client' => env('ADSENSE_AD_CLIENT', 'ca-pub-xxxxxxxxxxxxx'),
+        'ad_client' => env('ADSENSE_AD_CLIENT') ?: 'ca-pub-xxxxxxxxxxxxx',
         'header_slot' => env('ADSENSE_AD_SLOT_HEADER'),
         'sidebar_slot' => env('ADSENSE_AD_SLOT_SIDEBAR'),
         'inarticle_slot' => env('ADSENSE_AD_SLOT_INARTICLE'),
