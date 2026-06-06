@@ -37,7 +37,7 @@ class ApiClient:
     def is_configured(self) -> bool:
         return bool(self.token)
 
-    def _send(self, payload: dict, endpoint: str = "/api/v1/ingest") -> Optional[dict]:
+    def _send(self, payload: dict, endpoint: str = "/api/v1/ingest", retry_429: bool = True) -> Optional[dict]:
         url = f"{self.base_url}{endpoint}"
         for attempt in range(1, self.max_retries + 2):
             try:
@@ -80,24 +80,26 @@ class ApiClient:
         return 0
 
     def setup_entities(self, taxonomies: list, locations: list):
+        # Taxonomies ve locations zaten sunucuda mevcut (2095 lokasyon, 177 kategori)
+        # Rate limit'i aşmamak için tek seferde büyük batch gönder
         if taxonomies:
-            log.info(f"Setting up {len(taxonomies)} taxonomies...")
-            for i in range(0, len(taxonomies), self.batch_size):
-                batch = taxonomies[i:i + self.batch_size]
+            log.info(f"Setting up {len(taxonomies)} taxonomies (big batch)...")
+            for i in range(0, len(taxonomies), 73):
+                batch = taxonomies[i:i + 73]
                 resp = self._send({"taxonomies": batch})
                 if resp and resp.get("success"):
-                    log.info(f"  Taxonomies batch {i//self.batch_size + 1}: OK")
+                    log.info(f"  Taxonomies big batch: OK")
                 else:
-                    log.warning(f"  Taxonomies batch {i//self.batch_size + 1}: FAIL")
+                    log.warning(f"  Taxonomies big batch: FAIL")
         if locations:
-            log.info(f"Setting up {len(locations)} locations...")
-            for i in range(0, len(locations), self.batch_size):
-                batch = locations[i:i + self.batch_size]
+            log.info(f"Setting up {len(locations)} locations (big batch)...")
+            for i in range(0, len(locations), 500):
+                batch = locations[i:i + 500]
                 resp = self._send({"locations": batch})
                 if resp and resp.get("success"):
-                    log.info(f"  Locations batch {i//self.batch_size + 1}: OK")
+                    log.info(f"  Locations big batch: OK")
                 else:
-                    log.warning(f"  Locations batch {i//self.batch_size + 1}: FAIL")
+                    log.warning(f"  Locations big batch: FAIL")
 
     def health_check(self) -> bool:
         try:
