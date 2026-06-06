@@ -30,6 +30,9 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 from typing import Generator
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from core.data import TURKIYE_IL_ILCE, ALL_LOCATIONS, slugify_tr, get_districts
 from core.data import KATEGORILER, get_all_keywords, get_category_count
