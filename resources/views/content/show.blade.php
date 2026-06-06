@@ -4,6 +4,9 @@
 
 @section('meta_description', $metaDescription)
 
+@section('og_title', $content->seo_title)
+@section('og_description', $metaDescription)
+
 @push('head')
     <x-seo-json-ld :content="$content" :location="$location" :taxonomy="$taxonomy" />
 @endpush
