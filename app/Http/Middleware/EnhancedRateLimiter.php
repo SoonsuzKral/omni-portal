@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Cache;
 
 class EnhancedRateLimiter
 {
-    protected int $maxAttempts = 60;
+    protected int $maxAttempts = 600;
     protected int $decaySeconds = 60;
 
     public function handle(Request $request, Closure $next)
@@ -31,7 +31,7 @@ class EnhancedRateLimiter
         }
 
         if (RateLimiter::tooManyAttempts($key, $this->maxAttempts)) {
-            $this->blockIp($key, 300);
+            $this->blockIp($key, 60);
             
             Log::warning('Rate limit exceeded - IP blocked', [
                 'ip' => $request->ip(),
