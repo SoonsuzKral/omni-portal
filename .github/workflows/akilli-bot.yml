@@ -42,11 +42,13 @@ jobs:
         run: pip install requests python-dotenv
 
       - name: Restore checkpoint cache
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         id: checkpoint-cache
         with:
           path: akilli_checkpoint.json
-          key: akilli-checkpoint-${{ github.event.inputs.lang }}
+          key: akilli-checkpoint-${{ github.event.inputs.lang }}-${{ github.run_id }}
+          restore-keys: |
+            akilli-checkpoint-${{ github.event.inputs.lang }}-
 
       - name: Run Bot
         run: |
@@ -56,6 +58,13 @@ jobs:
             --lang ${{ github.event.inputs.lang }} \
             ${{ github.event.inputs.cities && format('--cities {0}', github.event.inputs.cities) }} \
             --resume
+
+      - name: Save checkpoint cache
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: akilli_checkpoint.json
+          key: akilli-checkpoint-${{ github.event.inputs.lang }}-${{ github.run_id }}
 
       - name: Upload checkpoint artifact
         uses: actions/upload-artifact@v4
