@@ -12,6 +12,20 @@ use Illuminate\Support\Facades\DB;
 
 class ContentController extends Controller
 {
+    public const INDEXED_CITIES = ['istanbul', 'ankara', 'izmir', 'bursa', 'antalya', 'adana', 'konya', 'gaziantep', 'mersin', 'kayseri'];
+
+    public const INDEXED_CATEGORIES = ['klima-servisi', 'kombi-servisi', 'dogalgaz', 'elektrikci', 'tesisatci', 'boyaci', 'nakliyat', 'temizlik', 'eczane', 'dis-hekimi', 'klima', 'kombi'];
+
+    /**
+     * Check if a content node should be indexed by search engines.
+     */
+    public static function shouldIndex($location, $taxonomy): bool
+    {
+        if (!$location || !$taxonomy) return false;
+        return in_array($location->slug, self::INDEXED_CITIES)
+            && in_array($taxonomy->slug, self::INDEXED_CATEGORIES);
+    }
+
     /**
      * Display a content node based on full URL structure.
      * Route: /{category}/{location_slug}/{slug}
@@ -33,17 +47,39 @@ class ContentController extends Controller
         // Increment page views
         $content->increment('page_views');
 
+        // Noindex logic
+        $shouldIndex = self::shouldIndex($location, $taxonomy);
+
         // Resolve placeholders and spintax in the body content
         $resolvedBody = PlaceholderResolver::resolve($content->body_content, $location, $taxonomy);
-        // Generate meta description (first 160 chars)
-        $metaDescription = PlaceholderResolver::metaDescription($resolvedBody);
-        // Pass resolved content and meta data to view
+        // Generate unique meta description per page
+        $metaDescription = app(\App\Services\SeoService::class)->generateUniqueMetaDescription($content, $location, $taxonomy);
+
+        // Related content for internal linking (only indexed cities)
+        $relatedByCategory = ContentNode::where('taxonomy_id', $taxonomy->id)
+            ->where('id', '!=', $content->id)
+            ->whereHas('location', fn($q) => $q->whereIn('slug', self::INDEXED_CITIES))
+            ->with(['location:id,name,slug', 'taxonomy:id,name,slug'])
+            ->select('id', 'title', 'slug', 'location_id', 'taxonomy_id')
+            ->limit(8)
+            ->get();
+
+        $relatedByLocation = ContentNode::where('location_id', $location->id)
+            ->where('id', '!=', $content->id)
+            ->with(['location:id,name,slug', 'taxonomy:id,name,slug'])
+            ->select('id', 'title', 'slug', 'location_id', 'taxonomy_id')
+            ->limit(6)
+            ->get();
+
         return view('content.show', [
             'content' => $content,
             'taxonomy' => $taxonomy,
             'location' => $location,
             'resolvedBody' => $resolvedBody,
             'metaDescription' => $metaDescription,
+            'shouldIndex' => $shouldIndex,
+            'relatedByCategory' => $relatedByCategory,
+            'relatedByLocation' => $relatedByLocation,
         ]);
     }
 
@@ -111,9 +147,26 @@ class ContentController extends Controller
         
         $location = $content->location;
         $taxonomy = $content->taxonomy;
+
+        $shouldIndex = self::shouldIndex($location, $taxonomy);
         
         $resolvedBody = PlaceholderResolver::resolve($content->body_content, $location, $taxonomy);
-        $metaDescription = PlaceholderResolver::metaDescription($resolvedBody);
+        $metaDescription = app(\App\Services\SeoService::class)->generateUniqueMetaDescription($content, $location, $taxonomy);
+
+        $relatedByCategory = ContentNode::where('taxonomy_id', $taxonomy->id)
+            ->where('id', '!=', $content->id)
+            ->whereHas('location', fn($q) => $q->whereIn('slug', self::INDEXED_CITIES))
+            ->with(['location:id,name,slug', 'taxonomy:id,name,slug'])
+            ->select('id', 'title', 'slug', 'location_id', 'taxonomy_id')
+            ->limit(8)
+            ->get();
+
+        $relatedByLocation = ContentNode::where('location_id', $location->id)
+            ->where('id', '!=', $content->id)
+            ->with(['location:id,name,slug', 'taxonomy:id,name,slug'])
+            ->select('id', 'title', 'slug', 'location_id', 'taxonomy_id')
+            ->limit(6)
+            ->get();
         
         return view('content.show', [
             'content' => $content,
@@ -121,6 +174,9 @@ class ContentController extends Controller
             'location' => $location,
             'resolvedBody' => $resolvedBody,
             'metaDescription' => $metaDescription,
+            'shouldIndex' => $shouldIndex,
+            'relatedByCategory' => $relatedByCategory,
+            'relatedByLocation' => $relatedByLocation,
         ]);
     }
 

@@ -4,6 +4,22 @@ Disallow: /admin/
 Disallow: /api/
 Disallow: /_debugbar/
 Disallow: /_ignition/
+Disallow: /nova/
+Disallow: /horizon/
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-News
+Allow: /
+
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: AdsBot-Google
+Allow: /
+
+Crawl-delay: 1
 
 Sitemap: https://omviportal.com/sitemap.xml
 Sitemap: https://omviportal.com/sitemap-categories.xml

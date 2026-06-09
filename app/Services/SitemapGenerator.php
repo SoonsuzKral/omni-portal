@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\ContentNode;
 use App\Models\Taxonomy;
 use App\Models\Location;
+use App\Http\Controllers\ContentController;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -47,8 +48,18 @@ class SitemapGenerator
 
     public function getTotalShards(): int
     {
-        $total = ContentNode::whereNotNull('publish_date')->count();
+        $total = $this->getIndexedContentQuery()->count();
         return max(1, (int) ceil($total / self::MAX_URLS_PER_SHARD));
+    }
+
+    protected function getIndexedContentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $indexedCities = ContentController::INDEXED_CITIES;
+        $indexedCategories = ContentController::INDEXED_CATEGORIES;
+
+        return ContentNode::whereNotNull('publish_date')
+            ->whereHas('location', fn($q) => $q->whereIn('slug', $indexedCities))
+            ->whereHas('taxonomy', fn($q) => $q->whereIn('slug', $indexedCategories));
     }
 
     public function invalidateCache(): void
@@ -100,7 +111,7 @@ class SitemapGenerator
         $writer->writeAttribute('xmlns', self::SITEMAP_NS);
 
         $added = 0;
-        ContentNode::whereNotNull('publish_date')
+        $this->getIndexedContentQuery()
             ->orderBy('crawl_priority_score', 'desc')
             ->orderBy('updated_at', 'desc')
             ->select('id', 'slug', 'taxonomy_id', 'location_id', 'updated_at', 'crawl_priority_score')
@@ -178,7 +189,7 @@ class SitemapGenerator
     protected function getShardLastmod(int $page): ?string
     {
         $offset = ($page - 1) * self::MAX_URLS_PER_SHARD;
-        $latest = ContentNode::whereNotNull('publish_date')
+        $latest = $this->getIndexedContentQuery()
             ->orderBy('crawl_priority_score', 'desc')
             ->orderBy('updated_at', 'desc')
             ->skip($offset)

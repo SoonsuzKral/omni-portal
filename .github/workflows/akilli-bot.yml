@@ -1,0 +1,74 @@
+name: Akilli Bot Runner
+
+on:
+  workflow_dispatch:
+    inputs:
+      lang:
+        description: 'Language (tr/en/ru/fr)'
+        required: true
+        default: 'tr'
+        type: choice
+        options:
+          - tr
+          - en
+          - ru
+          - fr
+      cities:
+        description: 'City filter (comma-separated, empty=all). Example: istanbul,ankara,izmir'
+        required: false
+        default: ''
+        type: string
+
+env:
+  OMNI_WORKERS: 1
+  OMNI_BATCH_SIZE: 5
+  OMNI_RATE_SLEEP: 2.0
+  OMNI_MAX_RETRIES: 5
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Restore checkpoint cache
+        uses: actions/cache@v4
+        id: checkpoint-cache
+        with:
+          path: akilli_checkpoint.json
+          key: akilli-checkpoint-${{ github.event.inputs.lang }}
+
+      - name: Run Bot
+        run: |
+          OMNI_BASE_URL="${{ secrets.OMNI_BASE_URL }}" \
+          OMNI_API_TOKEN="${{ secrets.OMNI_API_TOKEN }}" \
+          python bots/akilli_bot.py \
+            --lang ${{ github.event.inputs.lang }} \
+            ${{ github.event.inputs.cities && format('--cities {0}', github.event.inputs.cities) }} \
+            --resume
+
+      - name: Upload checkpoint artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: akilli-checkpoint-${{ github.event.inputs.lang }}
+          path: akilli_checkpoint.json
+          retention-days: 30
+
+      - name: Upload bot log
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bot-output-${{ github.event.inputs.lang }}
+          path: akilli_bot.log
+          retention-days: 7

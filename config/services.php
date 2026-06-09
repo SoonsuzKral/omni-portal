@@ -38,6 +38,7 @@ return [
     'google' => [
         'indexing_credentials' => env('GOOGLE_INDEXING_CREDENTIALS') ? json_decode(env('GOOGLE_INDEXING_CREDENTIALS'), true) : null,
         'indexing_service_account' => env('GOOGLE_INDEXING_SERVICE_ACCOUNT'),
+        'gsc_verification' => env('GSC_VERIFICATION'),
     ],
 
     'bing' => [

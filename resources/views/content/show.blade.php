@@ -8,7 +8,34 @@
 @section('og_description', $metaDescription)
 
 @push('head')
+    @if(!($shouldIndex ?? true))
+        <meta name="robots" content="noindex, follow">
+    @else
+        <meta name="robots" content="index, follow">
+    @endif
+
     <x-seo-json-ld :content="$content" :location="$location" :taxonomy="$taxonomy" />
+
+    {{-- LocalBusiness + FAQ JSON-LD --}}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "{{ $content->title }}",
+        "description": "{{ $metaDescription }}",
+        "url": "{{ url()->current() }}",
+        "areaServed": {
+            "@type": "City",
+            "name": "{{ $location?->name ?? '' }}"
+        },
+        "serviceType": "{{ $taxonomy?->name ?? '' }}",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "{{ $location?->name ?? '' }}",
+            "addressCountry": "TR"
+        }
+    }
+    </script>
 @endpush
 
 @section('content')
@@ -117,6 +144,102 @@
             {{ __('content.get_quote') }}
         </a>
     </div>
+
+    {{-- FAQ Bölümü --}}
+    <section class="faq-section mt-10 border-t border-gray-800 pt-8">
+        <h2 class="text-2xl font-bold text-white mb-6">{{ $location?->name ?? '' }} {{ $taxonomy?->name ?? '' }} Hakkında Sıkça Sorulan Sorular</h2>
+        <div class="faq-list space-y-4">
+            <details class="faq-item border border-gray-700 rounded-xl p-4 bg-slate-800/30">
+                <summary class="font-semibold text-white cursor-pointer">
+                    {{ $location?->name ?? '' }}'de {{ $taxonomy?->name ?? '' }} fiyatları ne kadar?
+                </summary>
+                <p class="mt-2 text-gray-400">
+                    {{ $location?->name ?? '' }} {{ $taxonomy?->name ?? '' }} fiyatları hizmetin kapsamına, malzeme kalitesine ve mesafeye göre değişmektedir. Ücretsiz keşif için hemen iletişime geçebilirsiniz.
+                </p>
+            </details>
+            <details class="faq-item border border-gray-700 rounded-xl p-4 bg-slate-800/30">
+                <summary class="font-semibold text-white cursor-pointer">
+                    {{ $taxonomy?->name ?? '' }} hizmeti ne kadar sürer?
+                </summary>
+                <p class="mt-2 text-gray-400">
+                    Standart {{ $taxonomy?->name ?? '' }} işlemleri genellikle 1-3 saat sürmektedir. Karmaşık durumlarda bu süre uzayabilir. Teknisyenimiz yerinde değerlendirme yapacaktır.
+                </p>
+            </details>
+            <details class="faq-item border border-gray-700 rounded-xl p-4 bg-slate-800/30">
+                <summary class="font-semibold text-white cursor-pointer">
+                    {{ $location?->name ?? '' }}'de acil {{ $taxonomy?->name ?? '' }} hizmeti var mı?
+                </summary>
+                <p class="mt-2 text-gray-400">
+                    Evet! {{ $location?->name ?? '' }} genelinde 7/24 acil {{ $taxonomy?->name ?? '' }} hizmeti sunuyoruz. Hafta sonu ve resmi tatil günlerinde de hizmetinizdeyiz.
+                </p>
+            </details>
+        </div>
+    </section>
+
+    {{-- FAQ Schema --}}
+    @push('head')
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "{{ $location?->name ?? '' }}'de {{ $taxonomy?->name ?? '' }} fiyatları ne kadar?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "{{ $location?->name ?? '' }} {{ $taxonomy?->name ?? '' }} fiyatları hizmetin kapsamına göre değişmektedir. Ücretsiz keşif için iletişime geçin."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "{{ $taxonomy?->name ?? '' }} hizmeti ne kadar sürer?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Standart işlemler 1-3 saat sürmektedir. Teknisyenimiz yerinde değerlendirme yapar."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "{{ $location?->name ?? '' }}'de acil hizmet var mı?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Evet, 7/24 acil hizmet sunuyoruz. Hafta sonu ve tatil günlerinde de hizmetinizdeyiz."
+                }
+            }
+        ]
+    }
+    </script>
+    @endpush
+
+    {{-- İlgili Hizmetler (Internal Linking) --}}
+    @if(isset($relatedByCategory) && $relatedByCategory->count() > 0)
+    <section class="related-cities mt-10 border-t border-gray-800 pt-8">
+        <h2 class="text-xl font-bold text-white mb-4">Diğer Şehirlerde {{ $taxonomy?->name ?? '' }}</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            @foreach($relatedByCategory as $related)
+                <a href="{{ url('/' . $related->taxonomy?->slug . '/' . $related->location?->slug . '/' . $related->slug) }}"
+                   class="p-3 border border-gray-700 rounded-xl hover:bg-slate-700/50 text-sm text-gray-300 hover:text-indigo-300 transition">
+                    {{ $related->location?->name }} {{ $taxonomy?->name ?? '' }}
+                </a>
+            @endforeach
+        </div>
+    </section>
+    @endif
+
+    @if(isset($relatedByLocation) && $relatedByLocation->count() > 0)
+    <section class="related-services mt-6">
+        <h2 class="text-xl font-bold text-white mb-4">{{ $location?->name ?? '' }}'de Diğer Hizmetler</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+            @foreach($relatedByLocation as $related)
+                <a href="{{ url('/' . $related->taxonomy?->slug . '/' . $related->location?->slug . '/' . $related->slug) }}"
+                   class="p-3 border border-gray-700 rounded-xl hover:bg-slate-700/50 text-sm text-gray-300 hover:text-indigo-300 transition">
+                    {{ $related->taxonomy?->name }}
+                </a>
+            @endforeach
+        </div>
+    </section>
+    @endif
 
     <div class="my-6">
         <x-ad-renderer :content="$content" position="bottom" />

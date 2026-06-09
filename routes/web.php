@@ -21,7 +21,12 @@ Route::get('/robots.txt', function () {
     $content .= "Sitemap: {$sitemapUrl}\n\n";
 
     try {
-        $totalContent = \App\Models\ContentNode::whereNotNull('publish_date')->count();
+        $indexedCities = \App\Http\Controllers\ContentController::INDEXED_CITIES;
+        $indexedCategories = \App\Http\Controllers\ContentController::INDEXED_CATEGORIES;
+        $totalContent = \App\Models\ContentNode::whereNotNull('publish_date')
+            ->whereHas('location', fn($q) => $q->whereIn('slug', $indexedCities))
+            ->whereHas('taxonomy', fn($q) => $q->whereIn('slug', $indexedCategories))
+            ->count();
         $totalShards = max(1, (int) ceil($totalContent / 45000));
         for ($i = 1; $i <= $totalShards; $i++) {
             $content .= "Sitemap: " . url("/sitemap-content-{$i}.xml") . "\n";
@@ -35,6 +40,9 @@ Route::get('/robots.txt', function () {
     $content .= "Disallow: /admin/\n";
     $content .= "Disallow: /api/\n";
     $content .= "Disallow: /_ignition/\n";
+    $content .= "Disallow: /nova/\n";
+    $content .= "Disallow: /horizon/\n";
+    $content .= "Crawl-delay: 1\n";
 
     return response($content, 200, ['Content-Type' => 'text/plain']);
 });

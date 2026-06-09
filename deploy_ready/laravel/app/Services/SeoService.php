@@ -52,6 +52,36 @@ class SeoService
         return Str::limit($cleanBody, $maxLength);
     }
 
+    /**
+     * Generate a unique meta description per content node using template variety.
+     * Each page gets a deterministic but different template based on its slug hash.
+     */
+    public function generateUniqueMetaDescription(ContentNode $content, ?Location $location = null, ?Taxonomy $taxonomy = null): string
+    {
+        $city = $location?->name ?? 'Şehir';
+        $district = $location?->parent?->name ?? $city;
+        $category = $taxonomy?->name ?? 'Hizmet';
+
+        if (!empty($content->meta_description)) {
+            $resolved = str_replace(['{city}', '{district}', '{category}'], [$city, $district, $category], $content->meta_description);
+            return Str::limit($resolved, 160);
+        }
+
+        $templates = [
+            "{$city} ilinde {$category} hizmeti arıyorsanız doğru yerdesiniz. 7/24 profesyonel {$category} ekibimiz hizmetinizde.",
+            "{$city} {$category} için en güvenilir adres. Hızlı, kaliteli ve uygun fiyatlı {$category} hizmeti.",
+            "{$district} ve {$city} genelinde {$category} hizmetleri. Deneyimli ekip, garantili iş.",
+            "{$city}'de {$category} sorununuz mu var? Uzman ekibimizle hızlı çözüm. Ücretsiz keşif.",
+            "Kaliteli {$category} hizmeti için {$city}'nin tercih ettiği adres. Hemen ara, hemen gel.",
+            "{$city} {$category} konusunda uzman kadromuzla hizmetinizdeyiz. Uygun fiyat, garantili hizmet.",
+            "Profesyonel {$category} ekibimiz {$city} genelinde 7/24 hizmet vermektedir. Hemen teklif alın.",
+            "{$city}'de güvenilir {$category} arayışınıza son nokta. Memnuniyet garantili profesyonel çözümler.",
+        ];
+
+        $index = abs(crc32($content->slug ?? $content->id)) % count($templates);
+        return $templates[$index];
+    }
+
     public function generateOgData(ContentNode $content, ?Location $location, ?Taxonomy $taxonomy): array
     {
         $description = $this->generateDescription($content, 200);

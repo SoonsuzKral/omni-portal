@@ -111,6 +111,25 @@ class SeoJsonLd extends Component
             ],
         ];
 
+        $cityName = $this->location?->name;
+        if ($cityName) {
+            $data['@graph'][] = [
+                '@type' => 'LocalBusiness',
+                'name' => $cityName . ' ' . ($this->taxonomy?->name ?? 'Hizmet'),
+                'url' => url()->current(),
+                'areaServed' => [
+                    '@type' => 'City',
+                    'name' => $cityName,
+                ],
+                'serviceType' => $this->taxonomy?->name ?? '',
+                'address' => [
+                    '@type' => 'PostalAddress',
+                    'addressLocality' => $cityName,
+                    'addressCountry' => 'TR',
+                ],
+            ];
+        }
+
         return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
