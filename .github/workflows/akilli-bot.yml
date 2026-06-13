@@ -24,6 +24,7 @@ env:
   OMNI_BATCH_SIZE: 5
   OMNI_RATE_SLEEP: 2.0
   OMNI_MAX_RETRIES: 5
+  OMNI_MAX_NODES: 300000
 
 jobs:
   run-bot:

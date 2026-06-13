@@ -64,6 +64,7 @@ CONFIG = {
     "RESUME": False,
     "LANGUAGE": "tr",
     "CITIES": None,
+    "MAX_NODES": int(os.getenv("OMNI_MAX_NODES", "500000")),
 }
 
 DILLER = {
@@ -298,7 +299,7 @@ class AkilliBot:
         if not dry:
             self.api.setup_entities(taxonomies, locations)
 
-        max_nodes = quick and 500 or 0
+        max_nodes = quick and 500 or self.config.get("MAX_NODES", 0)
         batch = []
         total_sent = 0
         all_slugs = set()
@@ -316,6 +317,7 @@ class AkilliBot:
                     self._save_checkpoint(all_slugs)
                     batch = []
                 if max_nodes and total_sent >= max_nodes:
+                    log.info(f"Maksimum node limitine ulaşıldı ({max_nodes:,}). Devam etmek için tekrar çalıştır.")
                     break
             else:
                 log.info(f"[DRY-RUN] {node['title']} -> {node['slug']}")
