@@ -168,6 +168,9 @@ class AkilliMatrix:
         return slug in self.skip_slugs
 
     def yield_nodes(self) -> Generator[dict, None, None]:
+        total_checked = 0
+        total_skipped = 0
+        log_interval = max(1, len(self.locations) * sum(len(c["keywords"]) for c in self.categories) // 20)
         for loc in self.locations:
             loc_name = loc["name"]
             loc_slug = loc["slug"]
@@ -177,8 +180,12 @@ class AkilliMatrix:
                 cat_slug = cat["slug"]
                 for kw in cat["keywords"]:
                     for qp in self.dil['soru_kaliplari']:
+                        total_checked += 1
                         if self._should_skip(loc_slug, cat_slug, kw, qp):
+                            total_skipped += 1
                             continue
+                        if total_checked % log_interval == 0:
+                            log.info(f"  İlerleme: {total_checked:,} node tarandı, {total_skipped:,} atlandı")
                         title = qp.format(il=loc_name, keyword=kw, ilce=city_name)
                         base_slug = self._unique_slug(
                             f"{loc_slug}-{cat_slug}-{slugify_tr(kw)}", loc_slug + kw + qp
@@ -285,52 +292,50 @@ class AkilliBot:
         if dry:
             log.info("DRY RUN — API çağrısı yapılmayacak")
 
-        nodes = []
-        for node in self.matrix.yield_nodes():
-            nodes.append(node)
-            if quick and len(nodes) >= 500:
-                break
-
-        if not nodes:
-            log.info("İşlenecek node yok. Hepsini işlemişsiniz!")
-            return
-
-        log.info(f"İşlenecek node: {len(nodes):,}")
-
         taxonomies = [{"name": c["name"], "slug": c["slug"]} for c in self.categories]
         locations = [{"name": l["name"], "slug": l["slug"]} for l in self.locations]
 
         if not dry:
             self.api.setup_entities(taxonomies, locations)
 
-            batches = [nodes[i:i + self.config["BATCH_SIZE"]]
-                       for i in range(0, len(nodes), self.config["BATCH_SIZE"])]
-            log.info(f"{len(batches)} batch gönderiliyor, {self.config['CONCURRENT_WORKERS']} worker...")
+        max_nodes = quick and 500 or 0
+        batch = []
+        total_sent = 0
+        all_slugs = set()
+        node_iter = self.matrix.yield_nodes()
 
-            with ThreadPoolExecutor(max_workers=self.config["CONCURRENT_WORKERS"]) as executor:
-                fut_map = {executor.submit(self.api.send_batch, b): b for b in batches}
-                done = 0
-                for fut in as_completed(fut_map):
-                    done += 1
-                    if done % 20 == 0:
-                        pct = done / len(batches) * 100
-                        log.info(f"  İlerleme: {done}/{len(batches)} (%{pct:.0f})")
-                    if done % 50 == 0:
-                        slgs = {n["slug"] for b in batches[:done] for n in b}
-                        self._save_checkpoint(slgs)
+        for node in node_iter:
+            if not dry:
+                batch.append(node)
+                if len(batch) >= self.config["BATCH_SIZE"]:
+                    self.api.send_batch(batch)
+                    total_sent += len(batch)
+                    log.info(f"  Gönderilen: {total_sent:,} node")
+                    slgs = {n["slug"] for n in batch}
+                    all_slugs.update(slgs)
+                    self._save_checkpoint(all_slugs)
+                    batch = []
+                if max_nodes and total_sent >= max_nodes:
+                    break
+            else:
+                log.info(f"[DRY-RUN] {node['title']} -> {node['slug']}")
 
-            all_slugs = {n["slug"] for n in nodes}
+        if batch and not dry:
+            self.api.send_batch(batch)
+            total_sent += len(batch)
+            slgs = {n["slug"] for n in batch}
+            all_slugs.update(slgs)
             self._save_checkpoint(all_slugs)
 
-            site_url = os.getenv("SITE_URL", "https://omviportal.com")
-            all_urls = [f"{site_url}/{slug}" for slug in all_slugs]
-            indexed = self.indexnow.notify(all_urls)
-            if indexed:
-                log.info(f"IndexNow: {indexed} URL indekslendi")
-        else:
-            log.info(f"[DRY-RUN] İlk 3 node örneği:")
-            for i, n in enumerate(nodes[:3]):
-                log.info(f"  {i+1}. {n['title']} -> {n['slug']}")
+        if not dry:
+            if total_sent:
+                log.info(f"Toplam gönderilen: {total_sent:,}")
+                site_url = os.getenv("SITE_URL", "https://omviportal.com")
+                indexed = self.indexnow.notify([f"{site_url}/{slug}" for slug in all_slugs])
+                if indexed:
+                    log.info(f"IndexNow: {indexed} URL indekslendi")
+            else:
+                log.info("İşlenecek node yok. Hepsini işlemişsiniz!")
 
         elapsed = time.time() - start
         stats = self.api.report_stats()
