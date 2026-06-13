@@ -148,45 +148,55 @@ CITY_SLUG_TO_DISPLAY = {
 
 
 class AkilliMatrix:
-    def __init__(self, locations: list, categories: list, lang: str = 'tr'):
+    def __init__(self, locations: list, categories: list, lang: str = 'tr', skip_slugs: set = None):
         self.locations = locations
         self.categories = categories
         self.lang = lang
         self.dil = DILLER.get(lang, DILLER['tr'])
+        self.skip_slugs = skip_slugs or set()
 
     def estimate_nodes(self) -> int:
         total_kw = sum(len(c["keywords"]) for c in self.categories)
         return len(self.locations) * total_kw * len(self.dil['soru_kaliplari'])
 
+    def _should_skip(self, loc_slug: str, cat_slug: str, keyword: str, qp: str) -> bool:
+        if not self.skip_slugs:
+            return False
+        prefix = self.dil['prefix']
+        base = self._unique_slug(f"{loc_slug}-{cat_slug}-{slugify_tr(keyword)}", loc_slug + keyword + qp)
+        slug = f"{prefix}{base}"
+        return slug in self.skip_slugs
+
     def yield_nodes(self) -> Generator[dict, None, None]:
         for loc in self.locations:
+            loc_name = loc["name"]
+            loc_slug = loc["slug"]
+            city_name = loc.get("parent_name", loc_name)
+            prefix = self.dil['prefix']
             for cat in self.categories:
+                cat_slug = cat["slug"]
                 for kw in cat["keywords"]:
-                    yield from self._make_nodes(loc, cat, kw)
-
-    def _make_nodes(self, loc: dict, cat: dict, keyword: str) -> Generator[dict, None, None]:
-        loc_name = loc["name"]
-        loc_slug = loc["slug"]
-        city_name = loc.get("parent_name", loc_name)
-        prefix = self.dil['prefix']
-
-        for qp in self.dil['soru_kaliplari']:
-            title = qp.format(il=loc_name, keyword=keyword, ilce=loc.get('parent_name', ''))
-            base_slug = self._unique_slug(f"{loc_slug}-{cat['slug']}-{slugify_tr(keyword)}", loc_slug + keyword + qp)
-            slug = f"{prefix}{base_slug}"
-            body = SpintaxEngine.generate_unique_body(loc, keyword)
-            meta = self.dil['meta_format'].format(il=loc_name, keyword=keyword)
-            yield {
-                "title": title,
-                "slug": slug,
-                "body_content": body,
-                "meta_description": meta[:320],
-                "language": self.lang,
-                "is_restricted_content": False,
-                "taxonomy_slug": cat["slug"],
-                "location_slug": loc_slug,
-                "published_at": datetime.now().isoformat(),
-            }
+                    for qp in self.dil['soru_kaliplari']:
+                        if self._should_skip(loc_slug, cat_slug, kw, qp):
+                            continue
+                        title = qp.format(il=loc_name, keyword=kw, ilce=city_name)
+                        base_slug = self._unique_slug(
+                            f"{loc_slug}-{cat_slug}-{slugify_tr(kw)}", loc_slug + kw + qp
+                        )
+                        slug = f"{prefix}{base_slug}"
+                        body = SpintaxEngine.generate_unique_body(loc, kw)
+                        meta = self.dil['meta_format'].format(il=loc_name, keyword=kw)
+                        yield {
+                            "title": title,
+                            "slug": slug,
+                            "body_content": body,
+                            "meta_description": meta[:320],
+                            "language": self.lang,
+                            "is_restricted_content": False,
+                            "taxonomy_slug": cat_slug,
+                            "location_slug": loc_slug,
+                            "published_at": datetime.now().isoformat(),
+                        }
 
     @staticmethod
     def _unique_slug(base: str, seed: str) -> str:
@@ -200,7 +210,7 @@ class AkilliBot:
         self.lang = config.get("LANGUAGE", "tr")
         self.locations = self._filter_locations()
         self.categories = KATEGORILER
-        self.matrix = AkilliMatrix(self.locations, self.categories, self.lang)
+        self.matrix = AkilliMatrix(self.locations, self.categories, self.lang, self._load_checkpoint())
         self.api = ApiClient(
             base_url=config["BASE_URL"],
             api_token=config["API_TOKEN"],
@@ -275,12 +285,8 @@ class AkilliBot:
         if dry:
             log.info("DRY RUN — API çağrısı yapılmayacak")
 
-        processed_slugs = self._load_checkpoint()
-
         nodes = []
         for node in self.matrix.yield_nodes():
-            if node["slug"] in processed_slugs:
-                continue
             nodes.append(node)
             if quick and len(nodes) >= 500:
                 break
