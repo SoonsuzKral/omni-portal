@@ -208,6 +208,7 @@ class AkilliBot:
     def __init__(self, config: dict):
         self.config = config
         self.lang = config.get("LANGUAGE", "tr")
+        self.checkpoint_path = Path(config["RESUME_FILE"])
         self.locations = self._filter_locations()
         self.categories = KATEGORILER
         self.matrix = AkilliMatrix(self.locations, self.categories, self.lang, self._load_checkpoint())
@@ -219,7 +220,6 @@ class AkilliBot:
             rate_sleep=config["RATE_LIMIT_SLEEP"],
             concurrent=config["CONCURRENT_WORKERS"],
         )
-        self.checkpoint_path = Path(config["RESUME_FILE"])
         self.indexnow = IndexNowNotifier()
 
     def _filter_locations(self):
